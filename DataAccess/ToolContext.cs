@@ -25,6 +25,10 @@ namespace Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Category>()
+                .Property(p => p.DelayPrice)
+                .HasPrecision(10, 2);
         }
 
         public void SeedData()
