@@ -19,8 +19,6 @@ namespace Domain.Models
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-        public User? User { get; set; }
 
-        public Admin? Admin { get; set; }
     }
 }
