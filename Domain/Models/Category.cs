@@ -17,5 +17,9 @@ namespace Domain.Models
         public int MinLoanDays { get; set; }
 
         public decimal DelayPrice { get; set; }
+
+        // Navigation properties    
+
+        public List<ToolType> ToolTypes { get; set; } = new List<ToolType>();
     }
 }

@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class Tool
+    public class ToolType
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public bool IsAvailable { get; set; }
 
         // Navigation properties
+        public List<Tool> Tools { get; set; } = new List<Tool>();
 
-        public ToolType? ToolType { get; set; } // The type of tool (e.g., drill, saw, etc.)
-        public Booking? Booking { get; set; }
-        
+        public Category? Category { get; set; } // The category this tool type belongs to - power tools, hand tools, gardening tools, etc.
     }
 }
