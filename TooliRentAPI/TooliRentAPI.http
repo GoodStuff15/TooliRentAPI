@@ -1,0 +1,6 @@
+@TooliRentAPI_HostAddress = http://localhost:5042
+
+GET {{TooliRentAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
