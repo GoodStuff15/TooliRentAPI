@@ -13,8 +13,10 @@ namespace Domain.Models
         public string Description { get; set; } = string.Empty;
         public bool IsAvailable { get; set; }
 
-        // Navigation
+        // Navigation properties
+
+        public ToolType? ToolType { get; set; } // The type of tool (e.g., drill, saw, etc.)
         public Booking? Booking { get; set; }
-        public Category? Category { get; set; }
+        
     }
 }
