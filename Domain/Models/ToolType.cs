@@ -11,6 +11,9 @@ namespace Domain.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
 
+        public int MaxLoanDays { get; set; } // Maximum number of days this type of tool can be loaned out
+        public int MinLoanDays { get; set; } // Minimum number of days this type of tool can be loaned out
+
         // Navigation properties
         public List<Tool> Tools { get; set; } = new List<Tool>();
 

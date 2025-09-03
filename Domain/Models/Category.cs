@@ -11,11 +11,6 @@ namespace Domain.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-
-        public int MaxLoanDays { get; set; }
-
-        public int MinLoanDays { get; set; }
-
         public decimal DelayPrice { get; set; }
 
         // Navigation properties    
