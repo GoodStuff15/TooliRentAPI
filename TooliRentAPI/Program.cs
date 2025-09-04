@@ -1,3 +1,6 @@
+using Application.Mappers;
+using Application.Services;
+using AutoMapper;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Interfaces;
@@ -8,8 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers().AddJsonOptions(x =>
-   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve); 
+builder.Services.AddControllers(); 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -19,6 +21,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ToolContext>(options => 
                                             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Automapper
+
+builder.Services.AddAutoMapper(cfg => {
+    cfg.AddProfile<ToolTypeMapConfig>();
+});
+
+builder.Services.AddScoped<IMapper, Mapper>();
 
 // Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -26,6 +35,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 // Repositories
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+// Services
+
+builder.Services.AddScoped<IToolTypeService, ToolTypeService>();
 
 var app = builder.Build();
 
