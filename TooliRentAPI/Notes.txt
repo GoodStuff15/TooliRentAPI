@@ -1,0 +1,13 @@
+﻿
+            // Example of After mapping for nested collections ->
+            
+            //CreateMap<Schedule, ScheduleReadDTO>()
+            //   .ForMember(dest => dest.Rounds, opt => opt.Ignore())
+            //   .AfterMap((src, dest, rc) =>
+            //   {
+            //       foreach (var round in src.Rounds)
+            //       {
+            //           dest.Rounds.Add(rc.Mapper.Map<RoundDTO>(round));
+            //       }
+            //   });
+

@@ -19,12 +19,12 @@ namespace Infrastructure.Repositories
             _context = context;
             _dbSet = _context.Set<TEntity>();
         }
-        public async Task AddAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity, CancellationToken ct = default)
         {
             await _dbSet.AddAsync(entity);
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int id, CancellationToken ct = default)
         {
            TEntity? entityToDelete = await _dbSet.FindAsync(id);
 
@@ -34,7 +34,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(string includeProperties = "",Expression<Func<TEntity, bool>> filter = null,
+        public async Task<IEnumerable<TEntity>> GetAllAsync(string includeProperties = "",CancellationToken ct = default, Expression<Func<TEntity, bool>> filter = null,
                                                     Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = _dbSet;
@@ -59,12 +59,12 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<TEntity?> GetByIdAsync(int id)
+        public async Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task Update(TEntity entity)
+        public async Task Update(TEntity entity, CancellationToken ct = default)
         {
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;

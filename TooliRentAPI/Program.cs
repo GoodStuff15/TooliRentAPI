@@ -1,3 +1,4 @@
+using Application.Mappers;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Interfaces;
@@ -19,6 +20,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ToolContext>(options => 
                                             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Automapper
+
+builder.Services.AddAutoMapper(cfg => {
+    cfg.AddProfile<TooLTypeMapConfig>();
+});
 
 // Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -18,7 +18,10 @@ namespace Application.Services
 
         public Task<ToolTypeReadDTO> CreateAsync(ToolTypeCreateDTO dto, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            
+            // Mapping logic from ToolTypeCreateDTO to ToolType entity would go here
+
+           
         }
 
         public Task<bool> DeleteAsync(int id, CancellationToken ct = default)
@@ -28,7 +31,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<ToolTypeReadDTO>> GetAllAsync(CancellationToken ct = default)
         {
-            var allEntities = _unitOfWork.ToolTypes.GetAllAsync(includeProperties: "Category");
+            var allEntities = await _unitOfWork.ToolTypes.GetAllAsync(includeProperties: "Category");
 
             // Then mapping logic from ToolType to ToolTypeReadDTO would go here
         }
