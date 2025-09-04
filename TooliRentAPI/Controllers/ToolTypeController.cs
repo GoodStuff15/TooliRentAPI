@@ -19,6 +19,11 @@ namespace Presentation.Controllers
         public async Task<IActionResult> GetAllToolTypes()
         {
             var toolTypes = await _unitOfWork.ToolTypes.GetAllAsync(includeProperties: "Category");
+
+            foreach(var x in toolTypes)
+            {
+                Console.WriteLine(x.Name);
+            }
             return Ok(toolTypes);
         }
     }

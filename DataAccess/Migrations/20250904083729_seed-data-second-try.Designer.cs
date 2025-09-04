@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ToolContext))]
-    partial class ToolContextModelSnapshot : ModelSnapshot
+    [Migration("20250904083729_seed-data-second-try")]
+    partial class seeddatasecondtry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,29 +117,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DelayPrice = 15.00m,
-                            Description = "Electric and battery-powered tools for construction and repair.",
-                            Name = "Power Tools"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DelayPrice = 5.00m,
-                            Description = "Manual tools for everyday tasks and repairs.",
-                            Name = "Hand Tools"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DelayPrice = 8.50m,
-                            Description = "Tools for gardening and landscaping.",
-                            Name = "Garden Tools"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Models.Tool", b =>
@@ -199,88 +179,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("ToolTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CategoryId = 1,
-                            MaxLoanDays = 7,
-                            MinLoanDays = 1,
-                            Name = "Cordless Drill"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CategoryId = 1,
-                            MaxLoanDays = 5,
-                            MinLoanDays = 1,
-                            Name = "Circular Saw"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CategoryId = 1,
-                            MaxLoanDays = 4,
-                            MinLoanDays = 1,
-                            Name = "Angle Grinder"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CategoryId = 2,
-                            MaxLoanDays = 10,
-                            MinLoanDays = 1,
-                            Name = "Hammer"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CategoryId = 2,
-                            MaxLoanDays = 10,
-                            MinLoanDays = 1,
-                            Name = "Screwdriver Set"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CategoryId = 2,
-                            MaxLoanDays = 8,
-                            MinLoanDays = 1,
-                            Name = "Wrench"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CategoryId = 3,
-                            MaxLoanDays = 3,
-                            MinLoanDays = 1,
-                            Name = "Lawn Mower"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CategoryId = 3,
-                            MaxLoanDays = 3,
-                            MinLoanDays = 1,
-                            Name = "Hedge Trimmer"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CategoryId = 3,
-                            MaxLoanDays = 7,
-                            MinLoanDays = 1,
-                            Name = "Shovel"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CategoryId = 3,
-                            MaxLoanDays = 7,
-                            MinLoanDays = 1,
-                            Name = "Rake"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Models.Booking", b =>

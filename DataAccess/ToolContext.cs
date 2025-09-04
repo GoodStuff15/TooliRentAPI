@@ -19,6 +19,8 @@ namespace Infrastructure
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Borrower> Borrowers { get; set; }
         public DbSet<Tool> Tools { get; set; }
+
+        public DbSet<ToolType> ToolTypes { get; set; }
         
         public DbSet<Category> Categories { get; set; }
 
@@ -29,6 +31,8 @@ namespace Infrastructure
             modelBuilder.Entity<Category>()
                 .Property(p => p.DelayPrice)
                 .HasPrecision(10, 2);
+
+            SeedData(modelBuilder);
         }
 
         public void SeedData(ModelBuilder modelBuilder)
