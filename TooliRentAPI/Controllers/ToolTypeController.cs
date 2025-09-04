@@ -8,23 +8,18 @@ namespace Presentation.Controllers
     [ApiController]
     public class ToolTypeController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ToolTypeController(IUnitOfWork unitOfWork)
+
+        public ToolTypeController()
         {
-            _unitOfWork = unitOfWork;
+            
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllToolTypes()
         {
-            var toolTypes = await _unitOfWork.ToolTypes.GetAllAsync(includeProperties: "Category");
 
-            foreach(var x in toolTypes)
-            {
-                Console.WriteLine(x.Name);
-            }
-            return Ok(toolTypes);
+            return Ok();
         }
     }
 }
