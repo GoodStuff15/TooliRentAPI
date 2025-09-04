@@ -13,7 +13,7 @@ namespace Application.Services
 
         Task<ToolTypeReadDTO?> GetByIdAsync(int id, CancellationToken ct = default);
 
-        Task<ToolTypeReadDTO> CreateAsync(ToolTypeCreateDTO dto, CancellationToken ct = default);
+        Task<int> CreateAsync(ToolTypeCreateDTO dto, CancellationToken ct = default);
 
         Task<ToolTypeReadDTO?> UpdateAsync(int id, ToolTypeUpdateDTO dto, CancellationToken ct = default);
 

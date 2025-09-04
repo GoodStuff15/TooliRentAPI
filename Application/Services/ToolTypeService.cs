@@ -1,4 +1,6 @@
-﻿using Domain.DTOs;
+﻿using AutoMapper;
+using Domain.DTOs;
+using Domain.Models;
 using Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,17 +13,24 @@ namespace Application.Services
     public class ToolTypeService : IToolTypeService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ToolTypeService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public ToolTypeService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public Task<ToolTypeReadDTO> CreateAsync(ToolTypeCreateDTO dto, CancellationToken ct = default)
+        public async Task<int> CreateAsync(ToolTypeCreateDTO dto, CancellationToken ct = default)
         {
-            
-            // Mapping logic from ToolTypeCreateDTO to ToolType entity would go here
 
-           
+            var toCreate = _mapper.Map<ToolType>(dto);
+
+            await _unitOfWork.ToolTypes.AddAsync(toCreate, ct);
+            await _unitOfWork.SaveChanges(ct);
+
+            return toCreate.Id;
+
+
         }
 
         public Task<bool> DeleteAsync(int id, CancellationToken ct = default)
@@ -33,7 +42,14 @@ namespace Application.Services
         {
             var allEntities = await _unitOfWork.ToolTypes.GetAllAsync(includeProperties: "Category");
 
-            // Then mapping logic from ToolType to ToolTypeReadDTO would go here
+            var result = new List<ToolTypeReadDTO>();
+
+            foreach (var tooltype in allEntities)
+            {
+                result.Add(_mapper.Map<ToolTypeReadDTO>(tooltype));
+            }
+
+            return result;
         }
 
         public Task<ToolTypeReadDTO?> GetByIdAsync(int id, CancellationToken ct = default)
