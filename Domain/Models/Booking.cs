@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -40,6 +41,9 @@ namespace Domain.Models
 
 
         // Navigation properties
+
+      
+        public int BorrowerId { get; set; } // Foreign Key to Borrower
 
         public ICollection<Tool> Tools { get; set; } = new List<Tool>();
 

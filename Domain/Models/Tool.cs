@@ -15,6 +15,8 @@ namespace Domain.Models
 
         // Navigation properties
 
+        public int ? ToolTypeId { get; set; } // Foreign Key to ToolType
+        public int ? BookingId { get; set; } // Foreign Key to Booking
         public ToolType? ToolType { get; set; } // The type of tool (e.g., drill, saw, etc.)
         public Booking? Booking { get; set; }
         
