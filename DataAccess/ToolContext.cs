@@ -31,9 +31,51 @@ namespace Infrastructure
                 .HasPrecision(10, 2);
         }
 
-        public void SeedData()
+        public void SeedData(ModelBuilder modelBuilder)
         {
-            // Not implemented yet
+
+            // Seed Tool Categories
+
+            modelBuilder.Entity<Category>().HasData(
+            new Category
+            {
+            Id = 1,
+            Name = "Power Tools",
+            Description = "Electric and battery-powered tools for construction and repair.",
+            DelayPrice = 15.00m
+            },
+            new Category
+            {
+            Id = 2,
+            Name = "Hand Tools",
+            Description = "Manual tools for everyday tasks and repairs.",
+            DelayPrice = 5.00m
+            },
+            new Category
+            {
+            Id = 3,
+            Name = "Garden Tools",
+            Description = "Tools for gardening and landscaping.",
+            DelayPrice = 8.50m
+            }
+            );
+
+            // Seed ToolTypes
+            modelBuilder.Entity<ToolType>().HasData(
+                new ToolType { Id = 1, Name = "Cordless Drill", MaxLoanDays = 7, MinLoanDays = 1, CategoryId = 1 },
+                new ToolType { Id = 2, Name = "Circular Saw", MaxLoanDays = 5, MinLoanDays = 1, CategoryId = 1 },
+                new ToolType { Id = 3, Name = "Angle Grinder", MaxLoanDays = 4, MinLoanDays = 1, CategoryId = 1 },
+                new ToolType { Id = 4, Name = "Hammer", MaxLoanDays = 10, MinLoanDays = 1, CategoryId = 2 },
+                new ToolType { Id = 5, Name = "Screwdriver Set", MaxLoanDays = 10, MinLoanDays = 1, CategoryId = 2 },
+                new ToolType { Id = 6, Name = "Wrench", MaxLoanDays = 8, MinLoanDays = 1, CategoryId = 2 },
+                new ToolType { Id = 7, Name = "Lawn Mower", MaxLoanDays = 3, MinLoanDays = 1, CategoryId = 3 },
+                new ToolType { Id = 8, Name = "Hedge Trimmer", MaxLoanDays = 3, MinLoanDays = 1, CategoryId = 3 },
+                new ToolType { Id = 9, Name = "Shovel", MaxLoanDays = 7, MinLoanDays = 1, CategoryId = 3 },
+                new ToolType { Id = 10, Name = "Rake", MaxLoanDays = 7, MinLoanDays = 1, CategoryId = 3 }
+            );
+
+
+
         }
     }
 }
