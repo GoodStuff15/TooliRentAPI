@@ -26,21 +26,25 @@ namespace Application.Services
             var toCreate = _mapper.Map<ToolType>(dto);
 
             await _unitOfWork.ToolTypes.AddAsync(toCreate, ct);
-            await _unitOfWork.SaveChanges(ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
             return toCreate.Id;
 
 
         }
 
-        public Task<bool> DeleteAsync(int id, CancellationToken ct = default)
+        public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var entityToDelete = await _unitOfWork.ToolTypes.GetByIdAsync(id, ct);
+            if (entityToDelete == null) return false;
+            await _unitOfWork.ToolTypes.DeleteAsync(entityToDelete, ct);
+
+            return await _unitOfWork.SaveChangesAsync(ct);
         }
 
         public async Task<IEnumerable<ToolTypeReadDTO>> GetAllAsync(CancellationToken ct = default)
         {
-            var allEntities = await _unitOfWork.ToolTypes.GetAllAsync(includeProperties: "Category");
+            var allEntities = await _unitOfWork.ToolTypes.GetAsync(includeProperties: "Category", ct);
 
             var result = new List<ToolTypeReadDTO>();
 
@@ -52,14 +56,23 @@ namespace Application.Services
             return result;
         }
 
-        public Task<ToolTypeReadDTO?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<ToolTypeReadDTO?> GetByIdAsync(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var entity = await _unitOfWork.ToolTypes.GetAsync
+                                          (includeProperties: "Category", ct, i =>  i.Id == id);
+
+            return entity.FirstOrDefault() == null ? null : _mapper.Map<ToolTypeReadDTO>(entity.FirstOrDefault());
         }
 
-        public Task<ToolTypeReadDTO?> UpdateAsync(int id, ToolTypeUpdateDTO dto, CancellationToken ct = default)
+        public async Task<bool> UpdateAsync(int id, ToolTypeUpdateDTO dto, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var entityToUpdate = await _unitOfWork.ToolTypes.GetByIdAsync(id, ct);
+
+            if (entityToUpdate == null) return false;
+            
+            await _unitOfWork.ToolTypes.UpdateAsync(_mapper.Map(dto, entityToUpdate), ct);
+            return await _unitOfWork.SaveChangesAsync(ct);
+
         }
     }
 }

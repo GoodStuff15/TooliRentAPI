@@ -9,12 +9,12 @@ namespace Infrastructure.Repositories.Interfaces
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAllAsync(string includeProperties, CancellationToken ct = default, Expression<Func<TEntity, bool>> filter = null,
+        Task<IEnumerable<TEntity>> GetAsync(string includeProperties, CancellationToken ct = default, Expression<Func<TEntity, bool>> filter = null,
                                                     Func<IQueryable<TEntity>, 
                                                     IOrderedQueryable<TEntity>> orderBy = null);
         Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default);
         Task AddAsync(TEntity entity, CancellationToken ct = default);
-        Task Update(TEntity entity, CancellationToken ct = default);
-        Task Delete(int id, CancellationToken ct = default);
+        Task UpdateAsync(TEntity entity, CancellationToken ct = default);
+        Task DeleteAsync(TEntity entity, CancellationToken ct = default);
     }
 }

@@ -31,9 +31,9 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<int> SaveChanges(CancellationToken ct = default)
+        public async Task<bool> SaveChangesAsync(CancellationToken ct = default)
         {
-            return await _context.SaveChangesAsync(ct);
+            return await _context.SaveChangesAsync(ct) > 0;
         }
 
         private bool disposed = false;
