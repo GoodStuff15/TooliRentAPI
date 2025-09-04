@@ -34,9 +34,8 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null,
-                                                    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-                                                    string includeProperties = "")
+        public async Task<IEnumerable<TEntity>> GetAllAsync(string includeProperties = "",Expression<Func<TEntity, bool>> filter = null,
+                                                    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = _dbSet;
 
