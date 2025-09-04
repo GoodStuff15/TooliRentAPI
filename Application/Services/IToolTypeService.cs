@@ -9,14 +9,14 @@ namespace Application.Services
 {
     public interface IToolTypeService
     {
-        Task<IEnumerable<ToolTypeReadDTO>> GetAllAsync();
+        Task<IEnumerable<ToolTypeReadDTO>> GetAllAsync(CancellationToken ct = default);
 
-        Task<ToolTypeReadDTO?> GetByIdAsync(int id);
+        Task<ToolTypeReadDTO?> GetByIdAsync(int id, CancellationToken ct = default);
 
-        Task<ToolTypeReadDTO> CreateAsync(ToolTypeCreateDTO dto);
+        Task<ToolTypeReadDTO> CreateAsync(ToolTypeCreateDTO dto, CancellationToken ct = default);
 
-        Task<ToolTypeReadDTO?> UpdateAsync(int id, ToolTypeUpdateDTO dto);
+        Task<ToolTypeReadDTO?> UpdateAsync(int id, ToolTypeUpdateDTO dto, CancellationToken ct = default);
 
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id, CancellationToken ct = default);
     }
 }

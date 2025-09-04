@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,27 +10,35 @@ namespace Application.Services
 {
     public class ToolTypeService : IToolTypeService
     {
-        public Task<ToolTypeReadDTO> CreateAsync(ToolTypeCreateDTO dto)
+        private readonly IUnitOfWork _unitOfWork;
+        public ToolTypeService(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
+        public Task<ToolTypeReadDTO> CreateAsync(ToolTypeCreateDTO dto, CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public Task<bool> DeleteAsync(int id, CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ToolTypeReadDTO>> GetAllAsync()
+        public async Task<IEnumerable<ToolTypeReadDTO>> GetAllAsync(CancellationToken ct = default)
+        {
+            var allEntities = _unitOfWork.ToolTypes.GetAllAsync(includeProperties: "Category");
+
+            // Then mapping logic from ToolType to ToolTypeReadDTO would go here
+        }
+
+        public Task<ToolTypeReadDTO?> GetByIdAsync(int id, CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ToolTypeReadDTO?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ToolTypeReadDTO?> UpdateAsync(int id, ToolTypeUpdateDTO dto)
+        public Task<ToolTypeReadDTO?> UpdateAsync(int id, ToolTypeUpdateDTO dto, CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }
