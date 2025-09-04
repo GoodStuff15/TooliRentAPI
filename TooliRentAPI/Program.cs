@@ -23,7 +23,7 @@ builder.Services.AddDbContext<ToolContext>(options =>
 // Automapper
 
 builder.Services.AddAutoMapper(cfg => {
-    cfg.AddProfile<TooLTypeMapConfig>();
+    cfg.AddProfile<ToolTypeMapConfig>();
 });
 
 // Unit of Work

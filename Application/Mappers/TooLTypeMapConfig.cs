@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Application.Mappers
 {
-    public class TooLTypeMapConfig : Profile
+    public class ToolTypeMapConfig : Profile
     {
-
-        public TooLTypeMapConfig() 
+         
+        public ToolTypeMapConfig() 
         {
 
             CreateMap<ToolTypeCreateDTO, ToolType>();
@@ -23,5 +23,7 @@ namespace Application.Mappers
 
 
         }
+
+
     }
 }
