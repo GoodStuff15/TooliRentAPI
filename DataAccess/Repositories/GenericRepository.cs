@@ -1,37 +1,74 @@
 ﻿using Infrastructure.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class GenericRepository<TEntity> where TEntity : class, IGenericRepository<TEntity>
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        public Task AddAsync(TEntity entity)
+        private readonly ToolContext _context;
+        private readonly DbSet<TEntity> _dbSet;
+
+        public GenericRepository(ToolContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _dbSet = _context.Set<TEntity>();
+        }
+        public async Task AddAsync(TEntity entity)
+        {
+            await _dbSet.AddAsync(entity);
         }
 
-        public Task Delete(TEntity entity)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+           TEntity? entityToDelete = await _dbSet.FindAsync(id);
+
+            if(entityToDelete != null)
+              {
+                 _dbSet.Remove(entityToDelete);
+            }
         }
 
-        public Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null,
+                                                    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+                                                    string includeProperties = "")
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = _dbSet;
+
+            if(filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            foreach(var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProperty);
+            }
+
+            if (orderBy != null)
+            {
+                return await orderBy(query).ToListAsync();
+            }
+            else
+            {
+               return await query.ToListAsync();
+            }
         }
 
-        public Task<TEntity?> GetByIdAsync(int id)
+        public async Task<TEntity?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.FindAsync(id);
         }
 
-        public Task Update(TEntity entity)
+        public async Task Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }
