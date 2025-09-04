@@ -9,9 +9,9 @@ namespace Infrastructure.Repositories.Interfaces
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter,
-                                                    Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy,
-                                                    string includeProperties);
+        Task<IEnumerable<TEntity>> GetAllAsync(string includeProperties, Expression<Func<TEntity, bool>> filter = null,
+                                                    Func<IQueryable<TEntity>, 
+                                                    IOrderedQueryable<TEntity>> orderBy = null);
         Task<TEntity?> GetByIdAsync(int id);
         Task AddAsync(TEntity entity);
         Task Update(TEntity entity);
