@@ -17,7 +17,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllToolTypes()
+        public async Task<IActionResult> GetAllToolTypes(CancellationToken ct)
         {
             var result = await _service.GetAllAsync();
             return Ok(result);
