@@ -24,17 +24,18 @@ namespace Infrastructure.Repositories
             await _dbSet.AddAsync(entity);
         }
 
-        public async Task Delete(int id, CancellationToken ct = default)
+        public async Task DeleteAsync(TEntity entity, CancellationToken ct = default)
         {
-           TEntity? entityToDelete = await _dbSet.FindAsync(id);
-
-            if(entityToDelete != null)
+           
+            if(entity != null)
               {
-                 _dbSet.Remove(entityToDelete);
+                 _dbSet.Remove(entity);
             }
+
+            await Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(string includeProperties = "",CancellationToken ct = default, Expression<Func<TEntity, bool>> filter = null,
+        public async Task<IEnumerable<TEntity>> GetAsync(string includeProperties = "",CancellationToken ct = default, Expression<Func<TEntity, bool>> filter = null,
                                                     Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = _dbSet;
@@ -61,13 +62,18 @@ namespace Infrastructure.Repositories
 
         public async Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default)
         {
-            return await _dbSet.FindAsync(id);
+           
+            return await _dbSet.FindAsync(id, ct);
+
+
         }
 
-        public async Task Update(TEntity entity, CancellationToken ct = default)
+        public async Task UpdateAsync(TEntity entity, CancellationToken ct = default)
         {
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
+            
+            await Task.CompletedTask;
         }
     }
 }

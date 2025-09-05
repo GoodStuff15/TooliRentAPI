@@ -15,7 +15,7 @@ namespace Application.Services
 
         Task<int> CreateAsync(ToolTypeCreateDTO dto, CancellationToken ct = default);
 
-        Task<ToolTypeReadDTO?> UpdateAsync(int id, ToolTypeUpdateDTO dto, CancellationToken ct = default);
+        Task<bool> UpdateAsync(int id, ToolTypeUpdateDTO dto, CancellationToken ct = default);
 
         Task<bool> DeleteAsync(int id, CancellationToken ct = default);
     }

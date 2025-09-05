@@ -15,6 +15,6 @@ namespace Infrastructure.Repositories.Interfaces
         IGenericRepository<Booking> Bookings { get; }
         IGenericRepository<Borrower> Borrowers { get; }
 
-        Task<int> SaveChanges(CancellationToken ct = default);
+        Task<bool> SaveChangesAsync(CancellationToken ct = default);
     }
 }
