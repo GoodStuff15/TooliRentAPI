@@ -11,3 +11,5 @@
             //       }
             //   });
 
+            
+            * Kanske borde sparas data om när saker uppdaterats?
