@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Mappers
 {
-    internal class ToolMapConfig : Profile
+    public class ToolMapConfig : Profile
 
     {
 

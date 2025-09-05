@@ -25,6 +25,7 @@ builder.Services.AddDbContext<ToolContext>(options =>
 
 builder.Services.AddAutoMapper(cfg => {
     cfg.AddProfile<ToolTypeMapConfig>();
+    cfg.AddProfile<ToolMapConfig>();
 });
 
 builder.Services.AddScoped<IMapper, Mapper>();
@@ -39,6 +40,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 // Services
 
 builder.Services.AddScoped<IToolTypeService, ToolTypeService>();
+builder.Services.AddScoped<IToolService, ToolService>();
 
 var app = builder.Build();
 

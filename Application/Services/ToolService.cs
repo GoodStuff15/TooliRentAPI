@@ -43,8 +43,8 @@ namespace Application.Services
 
         public async Task<IEnumerable<ToolReadDTO>> GetAllAsync(CancellationToken ct = default)
         {
-            var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType, ToolType.Category", ct);
-
+            var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType", ct);
+           
             var result = new List<ToolReadDTO>();
 
             foreach (var tool in allEntities)
@@ -55,13 +55,15 @@ namespace Application.Services
             return result;
         }
 
-        public async Task<IEnumerable<ToolReadDTO>> GetAllFilteredAsync(int? toolTypeId = null, CancellationToken ct = default)
+        public async Task<IEnumerable<ToolReadDTO>> GetAllFilteredAsync(int toolTypeId, CancellationToken ct = default)
         {
             
-            var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType, ToolType.Category", ct, t => t.ToolTypeId == toolTypeId);
+            var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType", ct, t => t.ToolTypeId == toolTypeId);
             var result = new List<ToolReadDTO>();
+            
             foreach (var tool in allEntities)
             {
+              
                 result.Add(_mapper.Map<ToolReadDTO>(tool));
             }
             return result;
