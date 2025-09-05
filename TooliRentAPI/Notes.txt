@@ -13,3 +13,26 @@
 
             
             * Kanske borde sparas data om när saker uppdaterats?
+
+
+            1. **Registrera / logga in/ut**
+                - Skapa konto som medlem
+                - Erhålla JWT-token vid inloggning
+                - Förnya token vid behov
+            2. **Se verktyg**
+                - Lista alla tillgängliga verktyg
+                - Filtrera verktyg efter kategori, status, tillgänglighet
+                - Visa detaljerad information om specifika verktyg
+            3. **Boka verktyg**
+                - Boka ett eller flera verktyg för en kommande period
+                - Se egna bokningar och status
+                - Avboka bokningar
+            4. **Hämta / lämna tillbaka**
+                - Markera att verktyget har hämtats ut
+                - Markera att verktyget har återlämnats
+                - Hantera försenade återlämningar
+            5. **Admin-funktioner**
+                - CRUD-operationer på verktyg
+                - CRUD-operationer på verktygskategorier
+                - Hantera användare (aktivera/inaktivera)
+                - Se statistik över utlåning och användning
