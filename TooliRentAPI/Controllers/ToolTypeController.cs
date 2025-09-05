@@ -38,14 +38,33 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> CreateToolType([FromBody] ToolTypeCreateDTO dto, CancellationToken ct)
         {
-            var created = _service.CreateAsync(dto, ct);
-
-            if(created == null)
-            {
-                return 0;
-            }
-
+            var created = await _service.CreateAsync(dto, ct);
+            
             return Ok(created);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<bool>> UpdateToolType(int id, [FromBody] ToolTypeUpdateDTO dto, CancellationToken ct)
+        {
+            var result = await _service.UpdateAsync(id, dto, ct);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> DeleteToolType(int id, CancellationToken ct)
+        {
+            var result = await _service.DeleteAsync(id, ct);
+
+            if(!result)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
         }
 
 
