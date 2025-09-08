@@ -24,6 +24,9 @@ namespace Domain.Models
 
         public DateOnly ReturnedDate { get; set; }
 
+        // When was the booking created?
+        public DateTime CreatedAt { get; set; }
+
         // Is it currently active?
         public bool IsActive { get; set; } = false;
 
