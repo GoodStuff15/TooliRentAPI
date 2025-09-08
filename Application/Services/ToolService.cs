@@ -65,7 +65,6 @@ namespace Application.Services
             
             foreach (var tool in allEntities)
             {
-              
                 result.Add(_mapper.Map<ToolReadDTO>(tool));
             }
             return result;

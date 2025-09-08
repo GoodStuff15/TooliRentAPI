@@ -24,15 +24,7 @@ namespace Presentation.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("{toolTypeId}")]
-        //public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetByToolTypeId(int toolTypeId, CancellationToken ct = default)
-        //{
-        //    var allTools = await _toolService.GetAllFilteredAsync(toolTypeId, ct);
-
-        //    return Ok(allTools);
-        //}
-
-        [HttpGet("name")]
+        [HttpGet("FilterSearch")]
         public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetBySearchFilter([FromQuery] string? nameFilter,
                                                                   int? typeId, int? categoryId, bool? availability, CancellationToken ct = default)
         {
@@ -47,6 +39,37 @@ namespace Presentation.Controllers
 
             var filteredTools = await _toolService.GetAllFilteredAsync(dto, ct);
             return Ok(filteredTools);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<int>> CreateTool([FromBody] ToolCreateDTO dto, CancellationToken ct = default)
+        {
+            var newToolId = await _toolService.CreateAsync(dto, ct);
+
+            // FIX
+            return CreatedAtAction(nameof(GetAll), new { id = newToolId }, newToolId);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateTool(int id, [FromBody] ToolUpdateDTO dto, CancellationToken ct = default)
+        {
+            var updateResult = await _toolService.UpdateAsync(id, dto, ct);
+            if (!updateResult)
+            {
+                return NotFound();
+            }
+            return Ok("Tool updated");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTool(int id, CancellationToken ct = default)
+        {
+            var deleteResult = await _toolService.DeleteAsync(id, ct);
+            if (!deleteResult)
+            {
+                return NotFound();
+            }
+            return Ok("Tool deleted");
         }
     }
 }

@@ -16,7 +16,11 @@ namespace Application.Mappers
         public ToolMapConfig()
         {
 
-            CreateMap<Tool, ToolReadDTO>();
+            CreateMap<Tool, ToolReadDTO>()
+                .ForMember(dest => dest.ToolTypeName,
+                opt => opt.MapFrom(src => src.ToolType.Name))
+                .ForMember(dest => dest.CategoryName,
+                opt => opt.MapFrom(src => src.ToolType.Category.Name));
             CreateMap<ToolUpdateDTO, Tool>();
             CreateMap<ToolCreateDTO, Tool>();
         }
