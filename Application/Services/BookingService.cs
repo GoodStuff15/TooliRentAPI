@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.DTOs;
+using Domain.Models;
 using Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -20,25 +21,44 @@ namespace Application.Services
         }
 
 
-        public Task<BookingReceiptDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default)
+        public async Task<BookingReceiptDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var toCreate = _mapper.Map<Booking>(dto);
+
+            await _unitOfWork.Bookings.AddAsync(toCreate, ct);
+
+            await _unitOfWork.SaveChangesAsync(ct);
+
+            return _mapper.Map<BookingReceiptDTO>(toCreate);
         }
 
-        public Task<bool> DeleteBooking(int id, CancellationToken ct = default)
+        public async Task<bool> DeleteBooking(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var entityToDelete = await _unitOfWork.Bookings.GetByIdAsync(id, ct);
+            if (entityToDelete == null) return false;
+
+            await _unitOfWork.Bookings.DeleteAsync(entityToDelete, ct);
+
+            return await _unitOfWork.SaveChangesAsync(ct);
         }
 
 
-        public Task<IEnumerable<BookingReadDTO>> GetAllBookings(CancellationToken ct = default)
+        public async Task<IEnumerable<BookingReadDTO>> GetAllBookings(CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+           var bookings = await _unitOfWork.Bookings.GetAsync(includeProperties: "Tools", ct: ct);
+            var result = new List<BookingReadDTO>();
+            foreach(var booking in bookings)
+            {
+                result.Add(_mapper.Map<BookingReadDTO>(booking));
+            }
+            return result;
         }
 
-        public Task<BookingReadDTO?> GetBookingById(int id, CancellationToken ct = default)
+        public async Task<BookingReadDTO?> GetBookingById(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var entity = await _unitOfWork.Bookings.GetAsync(includeProperties: "Tools", ct: ct, b => b.Id == id);
+
+            return entity.FirstOrDefault() == null ? null : _mapper.Map<BookingReadDTO>(entity.First());
         }
 
         public async Task<IEnumerable<BookingReadDTO>> GetAllUserBookingsAsync(int userId, CancellationToken ct)
@@ -55,9 +75,15 @@ namespace Application.Services
             return result;
         }
 
-        public Task<bool> UpdateBooking(int id, BookingUpdateDTO dto, CancellationToken ct = default)
+        public async Task<bool> UpdateBooking(int id, BookingUpdateDTO dto, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var entityToUpdate = await _unitOfWork.Bookings.GetByIdAsync(id, ct);
+
+            if (entityToUpdate == null) return false;
+
+            await _unitOfWork.Bookings.UpdateAsync(_mapper.Map(dto, entityToUpdate), ct);
+
+            return await _unitOfWork.SaveChangesAsync(ct);
         }
 
         // NON-CRUD OPERATIONS

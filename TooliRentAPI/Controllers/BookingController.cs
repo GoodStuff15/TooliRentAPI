@@ -37,7 +37,7 @@ namespace Presentation.Controllers
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetBookingsByUserId(int userId, CancellationToken ct = default)
         {
-            var bookings = await _bookingService.GetAllFilteredAsync(userId, ct);
+            var bookings = await _bookingService.GetAllUserBookingsAsync(userId, ct);
             return Ok(bookings);
         }
 
