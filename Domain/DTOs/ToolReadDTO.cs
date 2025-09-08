@@ -7,5 +7,9 @@ namespace Domain.DTOs
         public string Description { get; init; } = string.Empty;
         public bool IsAvailable { get; init; }
         public int ToolTypeId { get; init; }
+
+        public string ToolTypeName { get; init; } = string.Empty;
+
+        public string CategoryName { get; init; } = string.Empty;
     }
 }

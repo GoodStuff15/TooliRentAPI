@@ -78,6 +78,39 @@ namespace Infrastructure
                 new ToolType { Id = 10, Name = "Rake", MaxLoanDays = 7, MinLoanDays = 1, CategoryId = 3 }
             );
 
+            // Seed Tools
+            modelBuilder.Entity<Tool>().HasData(
+                new Tool { Id = 1, Name = "Makita Cordless Drill", Description = "High-performance cordless drill for heavy-duty tasks.", IsAvailable = true, ToolTypeId = 1 },
+                new Tool { Id = 2, Name = "Bosch Power Drill", Description = "Reliable cordless drill suitable for home and professional use.", IsAvailable = true, ToolTypeId = 1 },
+
+                new Tool { Id = 3, Name = "DeWalt Circular Saw", Description = "Precision circular saw for clean and accurate cuts.", IsAvailable = true, ToolTypeId = 2 },
+                new Tool { Id = 4, Name = "Ryobi Circular Saw", Description = "Lightweight circular saw ideal for quick jobs.", IsAvailable = true, ToolTypeId = 2 },
+
+                new Tool { Id = 5, Name = "Milwaukee Angle Grinder", Description = "Durable angle grinder for metal and masonry work.", IsAvailable = true, ToolTypeId = 3 },
+                new Tool { Id = 6, Name = "Hitachi Angle Grinder", Description = "Compact angle grinder for detailed grinding tasks.", IsAvailable = true, ToolTypeId = 3 },
+
+                new Tool { Id = 7, Name = "Stanley Claw Hammer", Description = "Classic claw hammer for carpentry and repairs.", IsAvailable = true, ToolTypeId = 4 },
+                new Tool { Id = 8, Name = "Estwing Framing Hammer", Description = "Heavy-duty framing hammer for construction projects.", IsAvailable = true, ToolTypeId = 4 },
+
+                new Tool { Id = 9, Name = "Wiha Screwdriver Set", Description = "Precision screwdriver set for electronics and small repairs.", IsAvailable = true, ToolTypeId = 5 },
+                new Tool { Id = 10, Name = "Craftsman Screwdriver Set", Description = "Versatile screwdriver set for household tasks.", IsAvailable = true, ToolTypeId = 5 },
+
+                new Tool { Id = 11, Name = "Klein Adjustable Wrench", Description = "Adjustable wrench for plumbing and mechanical work.", IsAvailable = true, ToolTypeId = 6 },
+                new Tool { Id = 12, Name = "Irwin Pipe Wrench", Description = "Heavy-duty pipe wrench for tough jobs.", IsAvailable = true, ToolTypeId = 6 },
+
+                new Tool { Id = 13, Name = "Honda Lawn Mower", Description = "Efficient lawn mower for medium to large gardens.", IsAvailable = true, ToolTypeId = 7 },
+                new Tool { Id = 14, Name = "Greenworks Electric Mower", Description = "Eco-friendly electric mower for quiet operation.", IsAvailable = true, ToolTypeId = 7 },
+
+                new Tool { Id = 15, Name = "Black+Decker Hedge Trimmer", Description = "Cordless hedge trimmer for easy garden maintenance.", IsAvailable = true, ToolTypeId = 8 },
+                new Tool { Id = 16, Name = "Stihl Hedge Trimmer", Description = "Professional hedge trimmer for precise cutting.", IsAvailable = true, ToolTypeId = 8 },
+
+                new Tool { Id = 17, Name = "Fiskars Garden Shovel", Description = "Sturdy garden shovel for digging and planting.", IsAvailable = true, ToolTypeId = 9 },
+                new Tool { Id = 18, Name = "Ames Digging Shovel", Description = "Heavy-duty digging shovel for landscaping projects.", IsAvailable = true, ToolTypeId = 9 },
+
+                new Tool { Id = 19, Name = "True Temper Leaf Rake", Description = "Wide leaf rake for efficient yard cleanup.", IsAvailable = true, ToolTypeId = 10 },
+                new Tool { Id = 20, Name = "Garant Garden Rake", Description = "Durable garden rake for soil preparation.", IsAvailable = true, ToolTypeId = 10 }
+            );
+
 
 
         }
