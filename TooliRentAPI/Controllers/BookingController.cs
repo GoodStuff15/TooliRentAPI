@@ -34,6 +34,13 @@ namespace Presentation.Controllers
             return Ok(booking);
         }
 
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetBookingsByUserId(int userId, CancellationToken ct = default)
+        {
+            var bookings = await _bookingService.GetAllFilteredAsync(userId, ct);
+            return Ok(bookings);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] BookingCreateDTO dto, CancellationToken ct = default)
         {

@@ -13,13 +13,22 @@ namespace Application.Mappers
     {
         public BookingMapConfig()
         {
-            CreateMap<Booking, BookingReadDTO>();
+            CreateMap<Booking, BookingReceiptDTO>()
+                    .ForMember(dest => dest.BorrowedTools, opt => opt.Ignore())
+                     .AfterMap( (src, dest, rc) =>
+                     {
+                        foreach (var tool in src.Tools)
+                        {
+                            dest.BorrowedTools.Add(rc.Mapper.Map<ToolReadDTO>(tool));
+                        }
+                     }
+                );
             
             CreateMap<BookingCreateDTO, Booking>();
             
             CreateMap<BookingUpdateDTO, Booking>();
 
-            CreateMap<Booking, BookingReceiptDTO>();
+            CreateMap<Booking, BookingReadDTO>();
         }
     }
 }

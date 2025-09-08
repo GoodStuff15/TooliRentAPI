@@ -13,6 +13,6 @@ namespace Domain.DTOs
         public DateTime EndDate { get; init; }
         public DateTime CreatedAt { get; init; }
 
-        public IEnumerable<ToolReadDTO> BorrowedTools { get; init; } = Enumerable.Empty<ToolReadDTO>();
+        public ICollection<ToolReadDTO> BorrowedTools { get; init; } = new List<ToolReadDTO>();
     }
 }

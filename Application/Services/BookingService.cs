@@ -41,6 +41,20 @@ namespace Application.Services
             throw new NotImplementedException();
         }
 
+        public async Task<IEnumerable<BookingReadDTO>> GetAllUserBookingsAsync(int userId, CancellationToken ct)
+        {
+            var userBookings = await _unitOfWork.Bookings.GetAsync(filter: b => b.BorrowerId == userId, includeProperties: "Tools", ct: ct);
+
+            var result = new List<BookingReadDTO>();    
+
+            foreach(var booking in userBookings)
+            {
+              result.Add(_mapper.Map<BookingReadDTO>(booking));
+            }
+
+            return result;
+        }
+
         public Task<bool> UpdateBooking(int id, BookingUpdateDTO dto, CancellationToken ct = default)
         {
             throw new NotImplementedException();

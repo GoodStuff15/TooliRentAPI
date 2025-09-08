@@ -12,7 +12,9 @@ namespace Application.Services
         Task<BookingReceiptDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default);
         Task<IEnumerable<BookingReadDTO>> GetAllBookings(CancellationToken ct = default);
         Task<BookingReadDTO?> GetBookingById(int id, CancellationToken ct = default);
-          Task<bool> DeleteBooking(int id, CancellationToken ct = default);
+        
+        Task<IEnumerable<BookingReadDTO>> GetAllUserBookingsAsync(int userId, CancellationToken ct = default);
+        Task<bool> DeleteBooking(int id, CancellationToken ct = default);
 
         Task<bool> UpdateBooking(int id, BookingUpdateDTO dto, CancellationToken ct = default);
 
