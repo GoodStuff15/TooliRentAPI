@@ -15,6 +15,9 @@
             * Kanske borde sparas data om när saker uppdaterats?
 
 
+            // TODO: API Funktionalitet
+
+
             1. **Registrera / logga in/ut**
                 - Skapa konto som medlem
                 - Erhålla JWT-token vid inloggning

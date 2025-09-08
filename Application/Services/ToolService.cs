@@ -5,8 +5,10 @@ using Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Application.Services
 {
@@ -55,10 +57,10 @@ namespace Application.Services
             return result;
         }
 
-        public async Task<IEnumerable<ToolReadDTO>> GetAllFilteredAsync(int toolTypeId, CancellationToken ct = default)
+        public async Task<IEnumerable<ToolReadDTO>> GetAllFilteredAsync(ToolSearchDTO dto, CancellationToken ct = default)
         {
             
-            var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType", ct, t => t.ToolTypeId == toolTypeId);
+            var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType,ToolType.Category", ct, FilterFunction(dto));
             var result = new List<ToolReadDTO>();
             
             foreach (var tool in allEntities)
@@ -77,6 +79,15 @@ namespace Application.Services
         public Task<bool> UpdateAsync(int id, ToolUpdateDTO dto, CancellationToken ct = default)
         {
             throw new NotImplementedException();
+        }
+
+        public Expression<Func<Tool, bool>> FilterFunction(ToolSearchDTO dto)
+        {
+            return tool => (string.IsNullOrEmpty(dto.NameFilter) || tool.Name.Contains(dto.NameFilter)) &&
+                           (!dto.TypeId.HasValue || tool.ToolTypeId == dto.TypeId.Value) &&
+                           (!dto.CategoryId.HasValue || tool.ToolType.CategoryId == dto.CategoryId.Value) &&
+                           (!dto.Availability.HasValue || tool.IsAvailable == dto.Availability.Value);
+
         }
     }
 }

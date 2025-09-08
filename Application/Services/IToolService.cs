@@ -11,7 +11,7 @@ namespace Application.Services
     {
         Task<IEnumerable<ToolReadDTO>> GetAllAsync(CancellationToken ct = default);
 
-        Task<IEnumerable<ToolReadDTO>> GetAllFilteredAsync(int toolTypeId, CancellationToken ct = default);
+        Task<IEnumerable<ToolReadDTO>> GetAllFilteredAsync(ToolSearchDTO dto, CancellationToken ct = default);
 
         Task<ToolReadDTO?> GetByIdAsync(int id, CancellationToken ct = default);
         Task<int> CreateAsync(ToolCreateDTO dto, CancellationToken ct = default);

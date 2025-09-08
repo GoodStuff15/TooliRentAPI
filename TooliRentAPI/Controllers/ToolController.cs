@@ -24,12 +24,29 @@ namespace Presentation.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{toolTypeId}")]
-        public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetByToolTypeId(int toolTypeId, CancellationToken ct = default)
+        //[HttpGet("{toolTypeId}")]
+        //public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetByToolTypeId(int toolTypeId, CancellationToken ct = default)
+        //{
+        //    var allTools = await _toolService.GetAllFilteredAsync(toolTypeId, ct);
+
+        //    return Ok(allTools);
+        //}
+
+        [HttpGet("name")]
+        public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetBySearchFilter([FromQuery] string? nameFilter,
+                                                                  int? typeId, int? categoryId, bool? availability, CancellationToken ct = default)
         {
-            var allTools = await _toolService.GetAllFilteredAsync(toolTypeId, ct);
-            
-            return Ok(allTools);
+            var dto = new ToolSearchDTO
+            {
+                NameFilter = nameFilter,
+                TypeId = typeId,
+                CategoryId = categoryId,
+                Availability = availability
+            };
+
+
+            var filteredTools = await _toolService.GetAllFilteredAsync(dto, ct);
+            return Ok(filteredTools);
         }
     }
 }
