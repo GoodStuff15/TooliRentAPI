@@ -10,9 +10,9 @@ namespace Domain.DTOs
 
         // Status
 
-        public DateOnly PickedUpDate { get; init; }
+        public DateOnly? PickedUpDate { get; init; }
 
-        public DateOnly ReturnedDate { get; init; }
+        public DateOnly? ReturnedDate { get; init; }
 
         public bool IsActive { get; init; }
 

@@ -25,6 +25,19 @@ namespace Application.Services
         {
             var toCreate = _mapper.Map<Booking>(dto);
 
+            foreach(var toolId in dto.ToolIds)
+            {
+                var tool = await _unitOfWork.Tools.GetByIdAsync(toolId, ct);
+                if (tool != null)
+                {
+                    tool.IsAvailable = false; 
+                    toCreate.Tools.Add(tool);
+
+                    await _unitOfWork.Tools.UpdateAsync(tool, ct);
+                    await _unitOfWork.SaveChangesAsync(ct);
+                }
+            }
+
             await _unitOfWork.Bookings.AddAsync(toCreate, ct);
 
             await _unitOfWork.SaveChangesAsync(ct);
