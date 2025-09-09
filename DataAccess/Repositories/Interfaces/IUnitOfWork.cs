@@ -9,11 +9,24 @@ namespace Infrastructure.Repositories.Interfaces
 {
     public interface IUnitOfWork
     {
-        IGenericRepository<Tool> Tools { get; }
-        IGenericRepository<Category> Categories { get; }
-        IGenericRepository<ToolType> ToolTypes { get; }
-        IGenericRepository<Booking> Bookings { get; }
-        IGenericRepository<Borrower> Borrowers { get; }
+        ToolRepository Tools { get; }
+
+        CategoryRepository Categories { get; }
+
+        ToolTypeRepository ToolTypes { get; }
+
+        BookingRepository Bookings { get; }
+
+        BorrowerRepository Borrowers { get; }
+
+
+        // Earlier version using generic repositories:
+
+        //IGenericRepository<Tool> Tools { get; }
+        //IGenericRepository<Category> Categories { get; }
+        //IGenericRepository<ToolType> ToolTypes { get; }
+        //IGenericRepository<Booking> Bookings { get; }
+        //IGenericRepository<Borrower> Borrowers { get; }
 
         Task<bool> SaveChangesAsync(CancellationToken ct = default);
     }
