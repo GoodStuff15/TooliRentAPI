@@ -8,14 +8,12 @@ namespace Domain.DTOs
 {
     public record BorrowerFilterDTO
     {
-        public string? Name { get; init; }
-        public string? Email { get; init; }
-        public string? PhoneNumber { get; init; }
+        public string? FirstName { get; init; }
+        public string? LastName { get; init; }
+        public bool? IsActive { get; init; }
 
-        public bool? IsSuspended { get; init; }
-
-        public DateOnly CreatedAfter { get; init; }
-        public DateOnly CreatedBefore { get; init; }
+        //public DateOnly CreatedAfter { get; init; }
+        //public DateOnly CreatedBefore { get; init; }
 
         public bool hasBookings { get; init; }
         public bool hasLateBookings { get; init; }  

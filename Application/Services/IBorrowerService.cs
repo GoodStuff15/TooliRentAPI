@@ -12,7 +12,7 @@ namespace Application.Services
         Task<IEnumerable<BorrowerReadDTO>> GetAllAsync(CancellationToken ct = default);
         Task<BorrowerReadDTO?> GetByIdAsync(int id, CancellationToken ct = default);
 
-        Task<BorrowerReadDTO?> GetAllFilteredAsync(BorrowerFilterDTO dto, CancellationToken ct = default);
+        Task<IEnumerable<BorrowerReadDTO>> GetAllFilteredAsync(BorrowerFilterDTO dto, CancellationToken ct = default);
 
         Task<int> CreateAsync(BorrowerCreateDTO dto, CancellationToken ct = default);
         Task<bool> UpdateAsync(int id, BorrowerUpdateDTO dto, CancellationToken ct = default);

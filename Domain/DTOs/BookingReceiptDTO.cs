@@ -9,8 +9,8 @@ namespace Domain.DTOs
     public record BookingReceiptDTO
     {
         public int BookingId { get; init; }
-        public DateTime StartDate { get; init; }
-        public DateTime EndDate { get; init; }
+        public DateOnly StartDate { get; init; }
+        public DateOnly EndDate { get; init; }
         public DateTime CreatedAt { get; init; }
 
         public ICollection<ToolReadDTO> BorrowedTools { get; init; } = new List<ToolReadDTO>();

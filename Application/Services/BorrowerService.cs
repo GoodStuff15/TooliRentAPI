@@ -5,6 +5,7 @@ using Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -66,6 +67,20 @@ namespace Application.Services
             return entity.FirstOrDefault() == null ? null : _mapper.Map<BorrowerReadDTO>(entity.FirstOrDefault());
         }
 
+        public async Task<IEnumerable<BorrowerReadDTO>> GetAllFilteredAsync(BorrowerFilterDTO dto, CancellationToken ct = default)
+        { 
+            var allEntities = await _unitOfWork.Borrowers.GetAsync(includeProperties: "Bookings", ct: ct, filter: FilterFunction(dto));
+
+            var result = new List<BorrowerReadDTO>();
+
+            foreach (var borrower in allEntities)
+            {
+                result.Add(_mapper.Map<BorrowerReadDTO>(borrower));
+            }
+
+            return result;
+        }
+
         public async Task<bool> UpdateAsync(int id, BorrowerUpdateDTO dto, CancellationToken ct = default)
         {
             var entityToUpdate = _unitOfWork.Borrowers.GetByIdAsync(id, ct);
@@ -75,6 +90,15 @@ namespace Application.Services
             await _unitOfWork.Borrowers.UpdateAsync(_mapper.Map<Borrower>(dto), ct);
 
             return await _unitOfWork.SaveChangesAsync(ct);
+        }
+
+        public Expression<Func<Borrower, bool>> FilterFunction(BorrowerFilterDTO dto)
+        {
+            return b => (string.IsNullOrEmpty(dto.FirstName) || b.FirstName.Contains(dto.FirstName)) &&
+                        (string.IsNullOrEmpty(dto.LastName) || b.LastName.Contains(dto.LastName)) &&
+                        (!dto.hasBookings || b.Bookings.Count > 0) &&
+                        (!dto.hasLateBookings || b.Bookings.Where(b => b.EndDate < DateOnly.FromDateTime(DateTime.Now))
+                                                           .Any());
         }
 
 
