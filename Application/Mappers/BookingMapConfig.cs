@@ -9,20 +9,21 @@ using System.Threading.Tasks;
 
 namespace Application.Mappers
 {
-     public class BookingMapConfig : Profile
+    public class BookingMapConfig : Profile
     {
         public BookingMapConfig()
         {
             CreateMap<Booking, BookingReceiptDTO>()
+                    .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now))
                     .ForMember(dest => dest.BorrowedTools, opt => opt.Ignore())
-                     .AfterMap( (src, dest, rc) =>
+                     .AfterMap((src, dest, rc) =>
                      {
-                        foreach (var tool in src.Tools)
-                        {
-                            dest.BorrowedTools.Add(rc.Mapper.Map<ToolReadDTO>(tool));
-                        }
+                         foreach (var tool in src.Tools)
+                         {
+                             dest.BorrowedTools.Add(rc.Mapper.Map<ToolReadDTO>(tool));
+                         }
                      }
-                );
+                        );
             
             CreateMap<BookingCreateDTO, Booking>();
             

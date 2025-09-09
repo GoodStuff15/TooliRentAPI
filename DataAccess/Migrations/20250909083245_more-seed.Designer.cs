@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ToolContext))]
-    partial class ToolContextModelSnapshot : ModelSnapshot
+    [Migration("20250909083245_more-seed")]
+    partial class moreseed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,10 +51,10 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateOnly?>("PickedUpDate")
+                    b.Property<DateOnly>("PickedUpDate")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("ReturnedDate")
+                    b.Property<DateOnly>("ReturnedDate")
                         .HasColumnType("date");
 
                     b.Property<DateOnly>("StartDate")

@@ -27,6 +27,7 @@ builder.Services.AddAutoMapper(cfg => {
     cfg.AddProfile<ToolTypeMapConfig>();
     cfg.AddProfile<ToolMapConfig>();
     cfg.AddProfile<BookingMapConfig>();
+    cfg.AddProfile<BorrowerMapConfig>();
 });
 
 builder.Services.AddScoped<IMapper, Mapper>();
@@ -43,6 +44,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IToolTypeService, ToolTypeService>();
 builder.Services.AddScoped<IToolService, ToolService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IBorrowerService, BorrowerService>();
 
 var app = builder.Build();
 

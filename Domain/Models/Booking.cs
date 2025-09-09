@@ -20,9 +20,9 @@ namespace Domain.Models
 
         // The actual Pick up and Return date
 
-        public DateOnly PickedUpDate { get; set; }
+        public DateOnly? PickedUpDate { get; set; }
 
-        public DateOnly ReturnedDate { get; set; }
+        public DateOnly? ReturnedDate { get; set; }
 
         // When was the booking created?
         public DateTime CreatedAt { get; set; }

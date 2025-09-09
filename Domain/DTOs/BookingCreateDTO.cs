@@ -2,8 +2,8 @@ namespace Domain.DTOs
 {
     public record BookingCreateDTO
     {
-        public DateTime StartDate { get; init; }
-        public DateTime EndDate { get; init; }
+        public DateOnly StartDate { get; init; }
+        public DateOnly EndDate { get; init; }
         public int BorrowerId { get; init; }
         public bool IsActive { get; init; }
 
