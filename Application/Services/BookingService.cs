@@ -101,18 +101,78 @@ namespace Application.Services
 
         // NON-CRUD OPERATIONS
 
-        public Task<bool> CancelBooking(int id, CancellationToken ct = default)
+        public async Task<bool> CancelBooking(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var bookingToCancel = await _unitOfWork.Bookings.GetByIdAsync(id, ct);
+           
+            if (bookingToCancel == null) return false;
+
+            // Mark the booking as cancelled and inactive
+            bookingToCancel.IsCancelled = true;
+            bookingToCancel.IsActive = false;
+
+            // Make all associated tools available again
+            foreach (var tool in bookingToCancel.Tools)
+            {
+                tool.IsAvailable = true;
+                await _unitOfWork.Tools.UpdateAsync(tool, ct);
+            }
+
+            await _unitOfWork.Bookings.UpdateAsync(bookingToCancel, ct);
+
+            return await _unitOfWork.SaveChangesAsync(ct);
         }
 
-        public Task<bool> CompleteBooking(int id, CancellationToken ct = default)
+        public async Task<bool> CompleteBooking(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var bookingToComplete = await _unitOfWork.Bookings.GetByIdAsync(id, ct);
+
+            if (bookingToComplete == null) return false;
+
+            // Mark the booking as completed and inactive
+            bookingToComplete.IsCompleted = true;
+            bookingToComplete.IsActive = false;
+            bookingToComplete.WasReturned = true;
+            bookingToComplete.ReturnedDate = DateOnly.FromDateTime(DateTime.Now);
+
+            // Make all associated tools available again
+            foreach (var tool in bookingToComplete.Tools)
+            {
+                tool.IsAvailable = true;
+                await _unitOfWork.Tools.UpdateAsync(tool, ct);
+            }
+
+            await _unitOfWork.Bookings.UpdateAsync(bookingToComplete, ct);
+
+            return await _unitOfWork.SaveChangesAsync(ct);
         }
-        public Task<bool> ExtendBooking(int id, DateTime newEndDate, CancellationToken ct = default)
+        public async Task<bool> ExtendBooking(int id, DateOnly newEndDate, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var bookingToExtend = await _unitOfWork.Bookings.GetByIdAsync(id, ct);  
+
+            if (bookingToExtend == null) return false;
+
+            // Update the end date
+            bookingToExtend.EndDate = newEndDate;
+            await _unitOfWork.Bookings.UpdateAsync(bookingToExtend, ct);
+            return await _unitOfWork.SaveChangesAsync(ct);
+
+        }
+
+        public async Task<bool> PickupBooking(int id, CancellationToken ct = default)
+        {
+            var bookingToPickup = await _unitOfWork.Bookings.GetByIdAsync(id, ct);
+            if (bookingToPickup == null) return false;
+
+            // Mark the booking as picked up and active, start the rental period
+            bookingToPickup.WasPickedUp = true;
+            bookingToPickup.IsActive = true;
+            bookingToPickup.PickedUpDate = DateOnly.FromDateTime(DateTime.Now);
+
+            await _unitOfWork.Bookings.UpdateAsync(bookingToPickup, ct);
+
+            return await _unitOfWork.SaveChangesAsync(ct);
+
         }
     }
 }

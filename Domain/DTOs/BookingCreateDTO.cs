@@ -7,7 +7,7 @@ namespace Domain.DTOs
         public int BorrowerId { get; init; }
         public bool IsActive { get; init; }
 
-        public DateOnly? PickedUpDate { get; init; }
+        public bool PickedUp { get; init; } = false;
        
         public IEnumerable<int> ToolIds { get; init; } = Enumerable.Empty<int>();
     }
