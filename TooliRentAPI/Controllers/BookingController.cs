@@ -77,5 +77,49 @@ namespace Presentation.Controllers
             }
             return NoContent();
         }
+
+        [HttpPut("return/{id}")]
+        public async Task<IActionResult> CompleteBooking(int id, CancellationToken ct = default)
+        {
+            var result = await _bookingService.CompleteBooking(id, ct);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return Ok("Booking returned");
+        }
+
+        [HttpPut("extend/{id}")]
+        public async Task<IActionResult> ExtendBooking(int id, [FromQuery] DateOnly newEndDate, CancellationToken ct = default)
+        {
+            var result = await _bookingService.ExtendBooking(id, newEndDate, ct);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return Ok("Booking extended");
+        }
+
+        [HttpPut("cancel/{id}")]
+        public async Task<IActionResult> CancelBooking(int id, CancellationToken ct = default)
+        {
+            var result = await _bookingService.CancelBooking(id, ct);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return Ok("Booking canceled");
+        }
+
+        [HttpPut("pickup/{id}")]
+        public async Task<IActionResult> PickupBooking(int id, CancellationToken ct = default)
+        {
+            var result = await _bookingService.PickupBooking(id, ct);
+            if (!result)
+            {
+                return NotFound();
+            }
+            return Ok("Booking picked up");
+        }
     }
 }

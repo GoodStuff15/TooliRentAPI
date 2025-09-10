@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.DTOs;
 using Domain.Models;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +25,20 @@ namespace Application.Mappers
                          }
                      }
                         );
-            
-            CreateMap<BookingCreateDTO, Booking>();
-            
+
+            CreateMap<BookingCreateDTO, Booking>()
+                     .ForMember(dest => dest.PickedUpDate,
+                      opt => opt.Ignore())
+                     .AfterMap((src, dest, rc) =>
+                     {
+                         if(src.PickedUp)
+                         {
+                             dest.PickedUpDate = DateOnly.FromDateTime(DateTime.Now);
+                             dest.WasPickedUp = true;
+                         }
+                     }
+                        );
+
             CreateMap<BookingUpdateDTO, Booking>();
 
             CreateMap<Booking, BookingReadDTO>();
