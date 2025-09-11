@@ -1,4 +1,6 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure
 {
-    public class ToolContext : DbContext
+    public class ToolContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public ToolContext(DbContextOptions<ToolContext> options) : base(options)
         {
