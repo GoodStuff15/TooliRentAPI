@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,15 +17,17 @@ namespace Presentation.Controllers
             _bookingService = bookingService;
         }
 
-        [HttpGet] // Does this work? Just IActionResult?
-        public async Task<IActionResult> GetAllBookings(CancellationToken ct = default)
+        [Authorize(Roles = "Admin")]
+        [HttpGet] 
+        public async Task<ActionResult<IEnumerable<BookingReadDTO>>> GetAllBookings(CancellationToken ct = default)
         {
             var bookings = await _bookingService.GetAllBookings(ct);
             return Ok(bookings);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBookingById(int id, CancellationToken ct = default)
+        public async Task<ActionResult<BookingReadDTO>> GetBookingById(int id, CancellationToken ct = default)
         {
             var booking = await _bookingService.GetBookingById(id, ct);
             if (booking == null)
@@ -34,15 +37,17 @@ namespace Presentation.Controllers
             return Ok(booking);
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetBookingsByUserId(int userId, CancellationToken ct = default)
+        public async Task<ActionResult<IEnumerable<BookingReadDTO>>> GetBookingsByUserId(int userId, CancellationToken ct = default)
         {
             var bookings = await _bookingService.GetAllUserBookingsAsync(userId, ct);
             return Ok(bookings);
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpPost]
-        public async Task<IActionResult> CreateBooking([FromBody] BookingCreateDTO dto, CancellationToken ct = default)
+        public async Task<ActionResult<BookingReceiptDTO>> CreateBooking([FromBody] BookingCreateDTO dto, CancellationToken ct = default)
         {
             if (!ModelState.IsValid)
             {
@@ -52,6 +57,7 @@ namespace Presentation.Controllers
             return CreatedAtAction(nameof(GetBookingById), new { id = receipt.BookingId }, receipt);
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingUpdateDTO dto, CancellationToken ct = default)
         {
@@ -67,6 +73,7 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id, CancellationToken ct = default)
         {
@@ -78,6 +85,7 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("return/{id}")]
         public async Task<IActionResult> CompleteBooking(int id, CancellationToken ct = default)
         {
@@ -89,6 +97,7 @@ namespace Presentation.Controllers
             return Ok("Booking returned");
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpPut("extend/{id}")]
         public async Task<IActionResult> ExtendBooking(int id, [FromQuery] DateOnly newEndDate, CancellationToken ct = default)
         {
@@ -100,6 +109,7 @@ namespace Presentation.Controllers
             return Ok("Booking extended");
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpPut("cancel/{id}")]
         public async Task<IActionResult> CancelBooking(int id, CancellationToken ct = default)
         {
@@ -111,6 +121,7 @@ namespace Presentation.Controllers
             return Ok("Booking canceled");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("pickup/{id}")]
         public async Task<IActionResult> PickupBooking(int id, CancellationToken ct = default)
         {

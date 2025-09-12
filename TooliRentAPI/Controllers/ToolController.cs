@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +42,7 @@ namespace Presentation.Controllers
             return Ok(filteredTools);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<int>> CreateTool([FromBody] ToolCreateDTO dto, CancellationToken ct = default)
         {
@@ -50,6 +52,7 @@ namespace Presentation.Controllers
             return CreatedAtAction(nameof(GetAll), new { id = newToolId }, newToolId);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateTool(int id, [FromBody] ToolUpdateDTO dto, CancellationToken ct = default)
         {
@@ -61,6 +64,7 @@ namespace Presentation.Controllers
             return Ok("Tool updated");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTool(int id, CancellationToken ct = default)
         {
