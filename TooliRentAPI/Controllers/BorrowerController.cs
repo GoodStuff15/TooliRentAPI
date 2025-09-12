@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace Presentation.Controllers
             _borrowerService = borrowerService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BorrowerReadDTO>>> GetAllBorrowers(CancellationToken ct)
         {
@@ -34,6 +36,7 @@ namespace Presentation.Controllers
             return Ok(borrower);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("filter")]
         public async Task<ActionResult<IEnumerable<BorrowerReadDTO>>> GetFilteredBorrowers([FromQuery] BorrowerFilterDTO filterDto, CancellationToken ct)
         {
@@ -48,6 +51,7 @@ namespace Presentation.Controllers
             return CreatedAtAction(nameof(GetBorrowerById), new { id = newBorrowerId }, newBorrowerId);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBorrower(int id, [FromBody] BorrowerUpdateDTO updateDto, CancellationToken ct)
         {
@@ -59,6 +63,7 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBorrower(int id, CancellationToken ct)
         {

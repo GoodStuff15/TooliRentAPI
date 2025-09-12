@@ -1,6 +1,7 @@
 ﻿using Application.Services;
 using Domain.DTOs;
 using Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace Presentation.Controllers
             _service = service;
         }
 
+        
         [HttpGet]
         public async Task<IActionResult> GetAllToolTypes(CancellationToken ct)
         {
@@ -35,6 +37,7 @@ namespace Presentation.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<int>> CreateToolType([FromBody] ToolTypeCreateDTO dto, CancellationToken ct)
         {
@@ -43,6 +46,7 @@ namespace Presentation.Controllers
             return Ok(created);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<bool>> UpdateToolType(int id, [FromBody] ToolTypeUpdateDTO dto, CancellationToken ct)
         {
@@ -55,6 +59,7 @@ namespace Presentation.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> DeleteToolType(int id, CancellationToken ct)
         {
