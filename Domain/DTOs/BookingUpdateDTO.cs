@@ -2,12 +2,12 @@ namespace Domain.DTOs
 {
     public record BookingUpdateDTO
     {
-        public DateTime? StartDate { get; init; }
-        public DateTime? EndDate { get; init; }
+        public DateOnly StartDate { get; init; }
+        public DateOnly EndDate { get; init; }
 
-        public DateTime? PickedUpDate { get; init; } 
+        public DateOnly? PickedUpDate { get; init; } 
 
-        public DateTime? ReturnedDate { get; init; }
+        public DateOnly? ReturnedDate { get; init; }
 
         public bool? IsDeleted { get; init; }
         public bool? IsCompleted { get; init; }
@@ -15,6 +15,8 @@ namespace Domain.DTOs
         public bool? IsActive { get; init; }
 
         public bool? IsCancelled { get; init; }
-        
+
+        public IEnumerable<int> ToolIds { get; init; } = Enumerable.Empty<int>();
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.DTOs;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Presentation.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingService _bookingService;
+        private readonly IValidator<BookingCreateDTO> _newBookingValidator;
 
-        public BookingController(IBookingService bookingService)
+        public BookingController(IBookingService bookingService, IValidator<BookingCreateDTO> createValidator)
         {
             _bookingService = bookingService;
+            _newBookingValidator = createValidator;
         }
 
         [Authorize(Roles = "Admin")]
@@ -49,10 +52,13 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<ActionResult<BookingReceiptDTO>> CreateBooking([FromBody] BookingCreateDTO dto, CancellationToken ct = default)
         {
-            if (!ModelState.IsValid)
+            var validationResult = await _newBookingValidator.ValidateAsync(dto, ct);
+            
+            if (!validationResult.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(validationResult.Errors);
             }
+
             var receipt = await _bookingService.CreateBooking(dto, ct);
             return CreatedAtAction(nameof(GetBookingById), new { id = receipt.BookingId }, receipt);
         }
