@@ -81,8 +81,8 @@ namespace Presentation.Controllers
             claims.AddRange(roleClaims);
 
             var token = new JwtSecurityToken(
-                issuer: "your_issuer",
-                audience: "your_audience",
+                issuer: "TooliRentAPI",
+                audience: "TooliRentUsers",
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
