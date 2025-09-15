@@ -1,6 +1,7 @@
 ﻿using Application.Validators.BusinessValidation;
 using AutoMapper;
 using Domain.DTOs;
+using Domain.DTOs.ResponseDTOs;
 using Domain.Models;
 using Infrastructure.Repositories.Interfaces;
 using System;
@@ -17,28 +18,38 @@ namespace Application.Services
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly Borrower_Validation _validator; 
+        private readonly IBorrower_Validation _validator; 
 
-        public BorrowerService(IUnitOfWork unitOfWork, IMapper mapper)
+        public BorrowerService(IUnitOfWork unitOfWork, IMapper mapper, IBorrower_Validation validator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _validator = new Borrower_Validation(_unitOfWork);
+            _validator = validator;
         }
 
-        public async Task<int> CreateAsync(BorrowerCreateDTO dto, CancellationToken ct = default)
+        public async Task<BorrowerCreate_ResponseDTO> CreateAsync(BorrowerCreateDTO dto, CancellationToken ct = default)
         {
 
             // Testing user exists validation
 
-            if (await _validator.DoesUserExistAsync(dto.UserId) == false)
+            if (!await _validator.DoesUserExistAsync(dto.UserId))
             {
-                return 0;   
+                return new BorrowerCreate_ResponseDTO
+                {
+                    Success = false,
+                    Message = "User with supplied ID does not exist."
+                };
             }
 
             if(await _validator.IsEmailAlreadyRegistered(dto.Email, ct))
             {
-                return -1; // Email already registered
+                return new BorrowerCreate_ResponseDTO
+                {
+                    Success = false,
+                    Message = "Supplied Email is already registered with another borrower."
+                };
+
+                
             }
 
             var toCreate = _mapper.Map<Borrower>(dto);
@@ -46,7 +57,12 @@ namespace Application.Services
             await _unitOfWork.Borrowers.AddAsync(toCreate, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return toCreate.Id;
+            return new BorrowerCreate_ResponseDTO
+            {
+                Success = true,
+                Message = "Borrower created successfully.",
+                BorrowerId = toCreate.Id
+            };
         }
 
         public async Task<bool> DeleteAsync(int id, CancellationToken ct = default)

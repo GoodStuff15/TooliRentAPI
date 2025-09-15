@@ -1,5 +1,8 @@
 ﻿using Application.Services;
+using Application.Validators.DataValidation;
 using Domain.DTOs;
+using Domain.DTOs.ResponseDTOs;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +15,14 @@ namespace Presentation.Controllers
     {
         private readonly IBorrowerService _borrowerService;
 
-        public BorrowerController(IBorrowerService borrowerService)
+        private readonly IValidator<BorrowerCreateDTO> _createValidator;
+        private readonly IValidator<BorrowerUpdateDTO> _updateValidator;
+        public BorrowerController(IBorrowerService borrowerService, IValidator<BorrowerUpdateDTO> updateValidator,
+                                                                    IValidator<BorrowerCreateDTO> createValidator)
         {
             _borrowerService = borrowerService;
+            _updateValidator = updateValidator;
+            _createValidator = createValidator;
         }
 
         [Authorize(Roles = "Admin")]
@@ -25,6 +33,7 @@ namespace Presentation.Controllers
             return Ok(borrowers);
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpGet("{id}")]
         public async Task<ActionResult<BorrowerReadDTO>> GetBorrowerById(int id, CancellationToken ct)
         {
@@ -44,23 +53,47 @@ namespace Presentation.Controllers
             return Ok(borrowers);
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpPost]
-        public async Task<ActionResult<int>> CreateBorrower([FromBody] BorrowerCreateDTO createDto, CancellationToken ct)
+        public async Task<ActionResult<BorrowerCreate_ResponseDTO>> CreateBorrower([FromBody] BorrowerCreateDTO createDto, CancellationToken ct)
         {
-            var newBorrowerId = await _borrowerService.CreateAsync(createDto, ct);
-            return CreatedAtAction(nameof(GetBorrowerById), new { id = newBorrowerId }, newBorrowerId);
+            var validationResult = await _createValidator.ValidateAsync(createDto, ct);
+
+            if(!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var response = await _borrowerService.CreateAsync(createDto, ct);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBorrower(int id, [FromBody] BorrowerUpdateDTO updateDto, CancellationToken ct)
         {
+            var validationResult = await _updateValidator.ValidateAsync(updateDto, ct);
+
+            if(!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            
+            }
+
             var result = await _borrowerService.UpdateAsync(id, updateDto, ct);
+
             if (!result)
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok();
         }
 
         [Authorize(Roles = "Admin")]
@@ -72,7 +105,7 @@ namespace Presentation.Controllers
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok();
         }
     }
 }
