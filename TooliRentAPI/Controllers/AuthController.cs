@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.DTOs.IdentityDTOs;
+using Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Domain.DTOs.IdentityDTOs;
 
 namespace Presentation.Controllers
 {
@@ -17,11 +19,13 @@ namespace Presentation.Controllers
 
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly ToolContext _context;
 
-        public AuthController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AuthController(UserManager<IdentityUser> userManager, IConfiguration configuration, ToolContext context)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _context = context;
         }
 
         [HttpPost("register")]
@@ -48,7 +52,7 @@ namespace Presentation.Controllers
             var user = await _userManager.FindByNameAsync(dto.Username);
 
             if (user == null)
-            {   
+            {
                 return Unauthorized("user null");
             }
             if (!await _userManager.CheckPasswordAsync(user, dto.Password))
@@ -56,9 +60,93 @@ namespace Presentation.Controllers
                 return Unauthorized("password error");
             }
 
-            var token = await GenerateJwtTokenAsync(user);
-            return Ok(new { token });
+            var refreshToken = await GenerateRefreshTokenAsync();
+
+            var entity = new RefreshToken
+            {
+                Token = refreshToken,
+                UserId = user.Id,
+                Expires = DateTime.Now.AddDays(7),
+                Created = DateTime.Now,
+                IsRevoked = false
+            };
+
+            await _context.RefreshTokens.AddAsync(entity);
+
+            var jwttoken = await GenerateJwtTokenAsync(user);
+            return Ok(new { token = jwttoken, refresh = refreshToken });
         }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshRequestDTO dto, CancellationToken ct)
+        {
+            var refreshTokenEntity = await _context.RefreshTokens
+        .FirstOrDefaultAsync(rt => rt.Token == dto.RefreshToken && !rt.IsRevoked);
+
+            if (refreshTokenEntity == null || refreshTokenEntity.Expires < DateTime.UtcNow)
+                return Unauthorized("Invalid or expired refresh token.");
+
+            var user = await _userManager.FindByIdAsync(refreshTokenEntity.UserId);
+            if (user == null)
+                return Unauthorized();
+
+            // Revoke old token
+            refreshTokenEntity.IsRevoked = true;
+
+            // Generate new tokens
+            var newJwtToken = await GenerateJwtTokenAsync(user);
+            var newRefreshToken = await GenerateRefreshTokenAsync();
+
+            var newRefreshTokenEntity = new RefreshToken
+            {
+                Token = newRefreshToken,
+                UserId = user.Id,
+                Expires = DateTime.UtcNow.AddDays(7),
+                IsRevoked = false
+            };
+            _context.RefreshTokens.Add(newRefreshTokenEntity);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { token = newJwtToken, refreshToken = newRefreshToken });
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] RefreshRequestDTO dto)
+        {
+            var entity = await _context.RefreshTokens
+                .FirstOrDefaultAsync(rt => rt.Token == dto.RefreshToken && !rt.IsRevoked);
+
+            if (entity == null)
+            {
+                return BadRequest("Invalid refresh token.");
+            }
+
+            entity.IsRevoked = true;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Logged out successfully.");  
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO dto)
+        {
+            var user = await _userManager.FindByNameAsync(dto.UserName);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+            var result = await _userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+            await RevokeAllUserRefreshTokens(user.Id);
+            return Ok("Password changed successfully.");
+        }
+
+
+
 
         private async Task<string> GenerateJwtTokenAsync(IdentityUser user)
         {
@@ -88,6 +176,28 @@ namespace Presentation.Controllers
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private async Task<string> GenerateRefreshTokenAsync()
+        {
+            var randomNumber = new byte[64];
+            using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        private async Task RevokeAllUserRefreshTokens(string userId)
+        {
+            var tokens = await _context.RefreshTokens
+                .Where(rt => rt.UserId == userId && !rt.IsRevoked)
+                .ToListAsync();
+            foreach (var token in tokens)
+            {
+                token.IsRevoked = true;
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }
