@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Validators.BusinessValidation
+namespace Infrastructure
 {
-    public interface ITool_Validation
+    public record RefreshRequestDTO
     {
+        public string RefreshToken { get; set; } = string.Empty;
     }
 }

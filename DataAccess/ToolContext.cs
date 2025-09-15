@@ -21,10 +21,10 @@ namespace Infrastructure
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Borrower> Borrowers { get; set; }
         public DbSet<Tool> Tools { get; set; }
-
         public DbSet<ToolType> ToolTypes { get; set; }
-        
         public DbSet<Category> Categories { get; set; }
+
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
