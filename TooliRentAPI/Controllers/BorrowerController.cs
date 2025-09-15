@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.DTOs;
+using Domain.DTOs.ResponseDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,10 +46,9 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> CreateBorrower([FromBody] BorrowerCreateDTO createDto, CancellationToken ct)
+        public async Task<ActionResult<BorrowerCreate_ResponseDTO>> CreateBorrower([FromBody] BorrowerCreateDTO createDto, CancellationToken ct)
         {
-            var newBorrowerId = await _borrowerService.CreateAsync(createDto, ct);
-            return CreatedAtAction(nameof(GetBorrowerById), new { id = newBorrowerId }, newBorrowerId);
+            var response = await _borrowerService.CreateAsync(createDto, ct);
         }
 
         [Authorize(Roles = "Admin")]
