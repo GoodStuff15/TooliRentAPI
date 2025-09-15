@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using Application.Validators.BusinessValidation;
+using AutoMapper;
 using Domain.DTOs;
+using Domain.DTOs.ResponseDTOs;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Repositories.Interfaces;
@@ -16,26 +18,36 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IBooking_Validation _validator;
 
-        public BookingService(IUnitOfWork unitOfWork, IMapper mapper)
+        public BookingService(IUnitOfWork unitOfWork, IMapper mapper, IBooking_Validation validator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-           
+            _validator = validator;
         }
 
 
-        public async Task<BookingReceiptDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default)
+        public async Task<BookingCreate_ResponseDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default)
         {
+            var unavailable = await _validator.AreToolsAvailable(dto.ToolIds);
+            if (unavailable.Any())
+            {
+                return new BookingCreate_ResponseDTO
+                {
+                    Success = false,
+                    Message = "The following tool IDs are not available: " + string.Join(", ", unavailable)
+                };
+            }
 
             var toCreate = _mapper.Map<Booking>(dto);
 
-            foreach(var toolId in dto.ToolIds)
+            foreach (var toolId in dto.ToolIds)
             {
                 var tool = await _unitOfWork.Tools.GetByIdAsync(toolId, ct);
                 if (tool != null)
                 {
-                    tool.IsAvailable = false; 
+                    tool.IsAvailable = false;
                     toCreate.Tools.Add(tool);
 
                     await _unitOfWork.Tools.UpdateAsync(tool, ct);
@@ -47,7 +59,13 @@ namespace Application.Services
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return _mapper.Map<BookingReceiptDTO>(toCreate);
+            return new BookingCreate_ResponseDTO
+            {
+                Success = true,
+                Message = "Booking created successfully.",
+                BookingDetails = _mapper.Map<BookingReceiptDTO>(toCreate)
+            };
+            
         }
 
         public async Task<bool> DeleteBooking(int id, CancellationToken ct = default)

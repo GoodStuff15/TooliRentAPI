@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.DTOs.ResponseDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Application.Services
 {
     public interface IBookingService
     {
-        Task<BookingReceiptDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default);
+        Task<BookingCreate_ResponseDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default);
         Task<IEnumerable<BookingReadDTO>> GetAllBookings(CancellationToken ct = default);
         Task<BookingReadDTO?> GetBookingById(int id, CancellationToken ct = default);
         

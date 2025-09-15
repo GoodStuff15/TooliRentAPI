@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.DTOs;
+using Domain.DTOs.ResponseDTOs;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -50,7 +51,7 @@ namespace Presentation.Controllers
 
         [Authorize(Roles = "Admin, User")]
         [HttpPost]
-        public async Task<ActionResult<BookingReceiptDTO>> CreateBooking([FromBody] BookingCreateDTO dto, CancellationToken ct = default)
+        public async Task<ActionResult<BookingCreate_ResponseDTO>> CreateBooking([FromBody] BookingCreateDTO dto, CancellationToken ct = default)
         {
             var validationResult = await _newBookingValidator.ValidateAsync(dto, ct);
             
@@ -59,8 +60,14 @@ namespace Presentation.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var receipt = await _bookingService.CreateBooking(dto, ct);
-            return CreatedAtAction(nameof(GetBookingById), new { id = receipt.BookingId }, receipt);
+
+            var response = await _bookingService.CreateBooking(dto, ct);
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+
+            return Ok(response);
         }
 
         [Authorize(Roles = "Admin, User")]
