@@ -5,6 +5,7 @@ using Domain.DTOs.ResponseDTOs;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
@@ -14,15 +15,23 @@ namespace Presentation.Controllers
     public class BorrowerController : ControllerBase
     {
         private readonly IBorrowerService _borrowerService;
+        private readonly UserManager<IdentityUser> _userManager;
 
         private readonly IValidator<BorrowerCreateDTO> _createValidator;
         private readonly IValidator<BorrowerUpdateDTO> _updateValidator;
         public BorrowerController(IBorrowerService borrowerService, IValidator<BorrowerUpdateDTO> updateValidator,
-                                                                    IValidator<BorrowerCreateDTO> createValidator)
+                                                                    IValidator<BorrowerCreateDTO> createValidator,
+                                                                    UserManager<IdentityUser> userManager)
         {
             _borrowerService = borrowerService;
             _updateValidator = updateValidator;
             _createValidator = createValidator;
+            _userManager = userManager;
+        }
+
+        protected string GetUserId()
+        {
+            return this.User.Claims.First(i => i.Type == "UserId").Value.ToString();
         }
 
         [Authorize(Roles = "Admin")]
@@ -37,6 +46,7 @@ namespace Presentation.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BorrowerReadDTO>> GetBorrowerById(int id, CancellationToken ct)
         {
+
             var borrower = await _borrowerService.GetByIdAsync(id, ct);
             if (borrower == null)
             {

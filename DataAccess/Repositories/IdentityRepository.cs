@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class IdentityRepository : IIdentityRepository
     {
         private readonly ToolContext _context;
-        public UserRepository(ToolContext context)
+        public IdentityRepository(ToolContext context)
         {
             _context = context;
         }
@@ -20,6 +20,12 @@ namespace Infrastructure.Repositories
             var user = await _context.Users.FindAsync(userId, ct);
 
             return user != null;
+        }
+
+        public async Task AddRefreshTokenAsync(RefreshToken rt, CancellationToken ct = default)
+        {
+            await _context.RefreshTokens.AddAsync(rt, ct);
+            await _context.SaveChangesAsync(ct);
         }
     }
 }

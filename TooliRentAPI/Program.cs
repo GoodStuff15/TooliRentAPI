@@ -65,6 +65,19 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ToolContext>(options => 
                                             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// CORS
+var CorsPolicy = "CorsPolicy";
+builder.Services.AddCors(opt => 
+{
+    opt.AddPolicy(name: CorsPolicy, policy =>
+    {
+        policy.AllowAnyHeader()
+              .AllowAnyMethod()
+              .WithOrigins("http://localhost:5174") 
+              .AllowCredentials();
+    });
+});
+
 // Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(opt =>
     {
@@ -167,6 +180,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(CorsPolicy);
 // Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
@@ -174,6 +188,8 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 

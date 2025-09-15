@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IIdentityRepository
     {
 
         public Task<bool> DoesUserExist(string userId, CancellationToken ct = default);
+
+        public Task AddRefreshTokenAsync(RefreshToken rt, CancellationToken ct = default);
     }
 }

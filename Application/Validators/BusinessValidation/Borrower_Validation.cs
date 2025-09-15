@@ -19,7 +19,7 @@ namespace Application.Validators.BusinessValidation
 
         public async Task<bool> DoesUserExistAsync(string userId, CancellationToken ct = default)
         {
-            return await _unitOfWork.Users.DoesUserExist(userId, ct);
+            return await _unitOfWork.Identity.DoesUserExist(userId, ct);
         }
 
         public async Task<bool> IsEmailAlreadyRegistered(string email, CancellationToken ct = default)
