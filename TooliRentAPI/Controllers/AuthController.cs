@@ -21,13 +21,15 @@ namespace Presentation.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IBorrowerService _borrowerService;
+        private readonly ToolContext _context;
 
-        public AuthController(UserManager<IdentityUser> userManager, IConfiguration configuration, IBorrowerService borrowerService)
+        public AuthController(UserManager<IdentityUser> userManager, IConfiguration configuration, IBorrowerService borrowerService, ToolContext context)
         {
             _userManager = userManager;
             _configuration = configuration;
 
             _borrowerService = borrowerService;
+            _context = context;
         }
 
         [HttpPost("register")]
@@ -62,9 +64,9 @@ namespace Presentation.Controllers
                 return Unauthorized("password error");
             }
 
-            var borrower = _borrowerService.GetByUserIdAsync(user.Id, ct);
+            var borrower = await _borrowerService.GetByUserIdAsync(user.Id, ct);
 
-            var refreshToken = await GenerateRefreshTokenAsync();
+            var refreshToken = GenerateRefreshToken();
 
             var entity = new RefreshToken
             {
@@ -99,7 +101,7 @@ namespace Presentation.Controllers
 
             // Generate new tokens
             var newJwtToken = await GenerateJwtTokenAsync(user);
-            var newRefreshToken = await GenerateRefreshTokenAsync();
+            var newRefreshToken = GenerateRefreshToken();
 
             var newRefreshTokenEntity = new RefreshToken
             {
@@ -108,7 +110,7 @@ namespace Presentation.Controllers
                 Expires = DateTime.UtcNow.AddDays(7),
                 IsRevoked = false
             };
-            _context.RefreshTokens.Add(newRefreshTokenEntity);
+            await _context.RefreshTokens.AddAsync(newRefreshTokenEntity);
             await _context.SaveChangesAsync();
 
             return Ok(new { token = newJwtToken, refreshToken = newRefreshToken });
@@ -182,7 +184,7 @@ namespace Presentation.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private async Task<string> GenerateRefreshTokenAsync()
+        private string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
             using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
