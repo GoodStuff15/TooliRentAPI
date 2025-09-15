@@ -18,13 +18,13 @@ namespace Application.Services
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly Borrower_Validation _validator; 
+        private readonly IBorrower_Validation _validator; 
 
-        public BorrowerService(IUnitOfWork unitOfWork, IMapper mapper)
+        public BorrowerService(IUnitOfWork unitOfWork, IMapper mapper, IBorrower_Validation validator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _validator = new Borrower_Validation(_unitOfWork);
+            _validator = validator;
         }
 
         public async Task<BorrowerCreate_ResponseDTO> CreateAsync(BorrowerCreateDTO dto, CancellationToken ct = default)
@@ -32,7 +32,7 @@ namespace Application.Services
 
             // Testing user exists validation
 
-            if (await _validator.DoesUserExistAsync(dto.UserId) == false)
+            if (!await _validator.DoesUserExistAsync(dto.UserId))
             {
                 return new BorrowerCreate_ResponseDTO
                 {
@@ -43,11 +43,13 @@ namespace Application.Services
 
             if(await _validator.IsEmailAlreadyRegistered(dto.Email, ct))
             {
-                new BorrowerCreate_ResponseDTO
+                return new BorrowerCreate_ResponseDTO
                 {
                     Success = false,
                     Message = "Supplied Email is already registered with another borrower."
                 };
+
+                
             }
 
             var toCreate = _mapper.Map<Borrower>(dto);
