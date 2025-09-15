@@ -9,5 +9,7 @@ namespace Application.Validators.BusinessValidation
     public interface IBorrower_Validation
     {
         Task<bool> DoesUserExistAsync(string userId, CancellationToken ct = default);
+
+        Task<bool> IsEmailAlreadyRegistered(string email, CancellationToken ct = default);
     }
 }

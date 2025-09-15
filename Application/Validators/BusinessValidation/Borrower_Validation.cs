@@ -22,5 +22,10 @@ namespace Application.Validators.BusinessValidation
             return await _unitOfWork.Users.DoesUserExist(userId, ct);
         }
 
+        public async Task<bool> IsEmailAlreadyRegistered(string email, CancellationToken ct = default)
+        {
+            return await _unitOfWork.Borrowers.GetAsync(filter: b => b.Email == email, ct: ct) != null;
+        }
+
     }
 }

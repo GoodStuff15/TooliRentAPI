@@ -33,12 +33,14 @@ namespace Application.Services
 
             if (await _validator.DoesUserExistAsync(dto.UserId) == false)
             {
-                Console.WriteLine("*********************** NO EXIST **************************");
-                return 0;
-                
+                return 0;   
             }
 
-            Console.WriteLine("*********************************YES EXIST **************************");
+            if(await _validator.IsEmailAlreadyRegistered(dto.Email, ct))
+            {
+                return -1; // Email already registered
+            }
+
             var toCreate = _mapper.Map<Borrower>(dto);
 
             await _unitOfWork.Borrowers.AddAsync(toCreate, ct);
