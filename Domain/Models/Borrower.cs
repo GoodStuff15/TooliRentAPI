@@ -12,10 +12,18 @@ namespace Domain.Models
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
 
+        public string Email { get; set; } = string.Empty;
+
+        public string PhoneNumber { get; set; } = string.Empty;
+
+        public string Address { get; set; } = string.Empty;
+
         // Is this an active borrower?
         public bool IsActive { get; set; }
-        
+
         // Navigation
+
+        public string UserId { get; set; } = string.Empty; // Foreign key
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

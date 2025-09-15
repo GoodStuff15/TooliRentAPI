@@ -10,6 +10,8 @@ namespace Domain.DTOs
         public string PhoneNumber { get; init; } = string.Empty;
 
         public string Address { get; init; } = string.Empty;
+
+        public string UserId { get; init; } = string.Empty; // Foreign key to User 
         public bool IsActive { get; init; } 
     }
 }

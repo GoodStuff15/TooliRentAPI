@@ -17,6 +17,7 @@ namespace Infrastructure.Repositories
         private ToolTypeRepository? _toolTypeRepo;
         private BookingRepository? _bookingRepo;
         private BorrowerRepository? _borrowerRepo;
+        private UserRepository? _userRepo;
 
 
 
@@ -25,7 +26,7 @@ namespace Infrastructure.Repositories
         public ToolTypeRepository ToolTypes => _toolTypeRepo ??= new ToolTypeRepository(_context);
         public BookingRepository Bookings => _bookingRepo ??= new BookingRepository(_context);
         public BorrowerRepository Borrowers => _borrowerRepo ??= new BorrowerRepository(_context);
-
+        public UserRepository Users => _userRepo ??= new UserRepository(_context);
 
         // Earlier version using generic repositories:
 

@@ -15,8 +15,8 @@ namespace Domain.DTOs
         //public DateOnly CreatedAfter { get; init; }
         //public DateOnly CreatedBefore { get; init; }
 
-        public bool hasBookings { get; init; }
-        public bool hasLateBookings { get; init; }  
+        public bool HasBookings { get; init; }
+        public bool HasLateBookings { get; init; }  
 
     }
 }

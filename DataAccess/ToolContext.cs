@@ -113,14 +113,14 @@ namespace Infrastructure
                 new Tool { Id = 20, Name = "Garant Garden Rake", Description = "Durable garden rake for soil preparation.", IsAvailable = true, ToolTypeId = 10 }
             );
 
-            // Seed Borrowers
-            modelBuilder.Entity<Borrower>().HasData(
-                new Borrower { Id = 1, FirstName = "Alice", LastName = "Johnson", IsActive = true },
-                new Borrower { Id = 2, FirstName = "Michael", LastName = "Smith", IsActive = true },
-                new Borrower { Id = 3, FirstName = "Sophie", LastName = "Williams", IsActive = true },
-                new Borrower { Id = 4, FirstName = "David", LastName = "Brown", IsActive = true },
-                new Borrower { Id = 5, FirstName = "Emma", LastName = "Davis", IsActive = true }
-            );
+            //// Seed Borrowers
+            //modelBuilder.Entity<Borrower>().HasData(
+            //    new Borrower { Id = 1, FirstName = "Alice", LastName = "Johnson", IsActive = true },
+            //    new Borrower { Id = 2, FirstName = "Michael", LastName = "Smith", IsActive = true },
+            //    new Borrower { Id = 3, FirstName = "Sophie", LastName = "Williams", IsActive = true },
+            //    new Borrower { Id = 4, FirstName = "David", LastName = "Brown", IsActive = true },
+            //    new Borrower { Id = 5, FirstName = "Emma", LastName = "Davis", IsActive = true }
+            //);
 
 
 

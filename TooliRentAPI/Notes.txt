@@ -27,7 +27,7 @@
                 - Filtrera verktyg efter kategori, status, tillgänglighet
                 - Visa detaljerad information om specifika verktyg
             3. **Boka verktyg**
-                - Boka ett eller flera verktyg för en kommande period
+                - Boka ett eller flera verktyg för en kommande period 
                 - Se egna bokningar och status
                 - Avboka bokningar
             4. **Hämta / lämna tillbaka**

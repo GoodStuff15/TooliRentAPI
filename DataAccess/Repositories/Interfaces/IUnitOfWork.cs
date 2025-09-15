@@ -19,6 +19,8 @@ namespace Infrastructure.Repositories.Interfaces
 
         BorrowerRepository Borrowers { get; }
 
+        UserRepository Users { get; }
+
 
         // Earlier version using generic repositories:
 
