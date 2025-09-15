@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs;
+using Domain.DTOs.ResponseDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Application.Services
 
         Task<IEnumerable<BorrowerReadDTO>> GetAllFilteredAsync(BorrowerFilterDTO dto, CancellationToken ct = default);
 
-        Task<int> CreateAsync(BorrowerCreateDTO dto, CancellationToken ct = default);
+        Task<BorrowerCreate_ResponseDTO> CreateAsync(BorrowerCreateDTO dto, CancellationToken ct = default);
         Task<bool> UpdateAsync(int id, BorrowerUpdateDTO dto, CancellationToken ct = default);
         Task<bool> DeleteAsync(int id, CancellationToken ct = default);
     }

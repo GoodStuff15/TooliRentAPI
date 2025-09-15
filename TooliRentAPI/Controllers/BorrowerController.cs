@@ -49,6 +49,14 @@ namespace Presentation.Controllers
         public async Task<ActionResult<BorrowerCreate_ResponseDTO>> CreateBorrower([FromBody] BorrowerCreateDTO createDto, CancellationToken ct)
         {
             var response = await _borrowerService.CreateAsync(createDto, ct);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+
         }
 
         [Authorize(Roles = "Admin")]
