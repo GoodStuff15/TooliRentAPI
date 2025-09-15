@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Domain.DTOs;
 using Domain.Models;
+using FluentValidation;
 using Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,15 +16,18 @@ namespace Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+
         public BookingService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+           
         }
 
 
         public async Task<BookingReceiptDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default)
         {
+
             var toCreate = _mapper.Map<Booking>(dto);
 
             foreach(var toolId in dto.ToolIds)

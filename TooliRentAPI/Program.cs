@@ -13,6 +13,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation.IdentitySeed;
+using FluentValidation;
+using Domain.DTOs;
+using Application.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -118,6 +121,10 @@ builder.Services.AddAuthorization(opt =>
                     opt.AddPolicy("UserPolicy", policy => policy.RequireRole("User", "Admin"));
                 });
 
+
+// Validation 
+
+builder.Services.AddValidatorsFromAssemblyContaining<BookingCreateDTO_Validator>();
 
 
 // Automapper
