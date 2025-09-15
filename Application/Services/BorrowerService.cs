@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.Validators.BusinessValidation;
+using AutoMapper;
 using Domain.DTOs;
 using Domain.Models;
 using Infrastructure.Repositories.Interfaces;
@@ -16,15 +17,28 @@ namespace Application.Services
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly Borrower_Validation _validator; 
 
         public BorrowerService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _validator = new Borrower_Validation(_unitOfWork);
         }
 
         public async Task<int> CreateAsync(BorrowerCreateDTO dto, CancellationToken ct = default)
         {
+
+            // Testing user exists validation
+
+            if (await _validator.DoesUserExistAsync(dto.UserId) == false)
+            {
+                Console.WriteLine("*********************** NO EXIST **************************");
+                return 0;
+                
+            }
+
+            Console.WriteLine("*********************************YES EXIST **************************");
             var toCreate = _mapper.Map<Borrower>(dto);
 
             await _unitOfWork.Borrowers.AddAsync(toCreate, ct);
@@ -96,8 +110,8 @@ namespace Application.Services
         {
             return b => (string.IsNullOrEmpty(dto.FirstName) || b.FirstName.Contains(dto.FirstName)) &&
                         (string.IsNullOrEmpty(dto.LastName) || b.LastName.Contains(dto.LastName)) &&
-                        (!dto.hasBookings || b.Bookings.Count > 0) &&
-                        (!dto.hasLateBookings || b.Bookings.Where(b => b.EndDate < DateOnly.FromDateTime(DateTime.Now))
+                        (!dto.HasBookings || b.Bookings.Count > 0) &&
+                        (!dto.HasLateBookings || b.Bookings.Where(b => b.EndDate < DateOnly.FromDateTime(DateTime.Now))
                                                            .Any());
         }
 

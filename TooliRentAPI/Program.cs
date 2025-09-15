@@ -16,6 +16,7 @@ using Presentation.IdentitySeed;
 using FluentValidation;
 using Domain.DTOs;
 using Application.Validators;
+using Application.Validators.BusinessValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -122,10 +123,13 @@ builder.Services.AddAuthorization(opt =>
                 });
 
 
-// Validation 
+// Data Validation 
 
 builder.Services.AddValidatorsFromAssemblyContaining<BookingCreateDTO_Validator>();
 
+// Business Validation
+
+builder.Services.AddScoped<IBorrower_Validation, Borrower_Validation>();
 
 // Automapper
 
