@@ -1,4 +1,5 @@
-﻿using Domain.DTOs.IdentityDTOs;
+﻿using Application.Services;
+using Domain.DTOs.IdentityDTOs;
 using Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -19,13 +20,14 @@ namespace Presentation.Controllers
 
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly ToolContext _context;
+        private readonly IBorrowerService _borrowerService;
 
-        public AuthController(UserManager<IdentityUser> userManager, IConfiguration configuration, ToolContext context)
+        public AuthController(UserManager<IdentityUser> userManager, IConfiguration configuration, IBorrowerService borrowerService)
         {
             _userManager = userManager;
             _configuration = configuration;
-            _context = context;
+
+            _borrowerService = borrowerService;
         }
 
         [HttpPost("register")]
@@ -47,7 +49,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto, CancellationToken ct)
         {
             var user = await _userManager.FindByNameAsync(dto.Username);
 
@@ -60,6 +62,8 @@ namespace Presentation.Controllers
                 return Unauthorized("password error");
             }
 
+            var borrower = _borrowerService.GetByUserIdAsync(user.Id, ct);
+
             var refreshToken = await GenerateRefreshTokenAsync();
 
             var entity = new RefreshToken
@@ -71,10 +75,10 @@ namespace Presentation.Controllers
                 IsRevoked = false
             };
 
-            await _context.RefreshTokens.AddAsync(entity);
+            await _borrowerService.AddRefreshToken(entity, ct);
 
             var jwttoken = await GenerateJwtTokenAsync(user);
-            return Ok(new { token = jwttoken, refresh = refreshToken });
+            return Ok(new { token = jwttoken, refresh = refreshToken, user = borrower });
         }
 
         [HttpPost("refresh")]
@@ -186,6 +190,8 @@ namespace Presentation.Controllers
                 rng.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);
             }
+
+            
         }
 
         private async Task RevokeAllUserRefreshTokens(string userId)

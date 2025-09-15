@@ -19,16 +19,7 @@ namespace Infrastructure.Repositories.Interfaces
 
         BorrowerRepository Borrowers { get; }
 
-        UserRepository Users { get; }
-
-
-        // Earlier version using generic repositories:
-
-        //IGenericRepository<Tool> Tools { get; }
-        //IGenericRepository<Category> Categories { get; }
-        //IGenericRepository<ToolType> ToolTypes { get; }
-        //IGenericRepository<Booking> Bookings { get; }
-        //IGenericRepository<Borrower> Borrowers { get; }
+        IdentityRepository Identity { get; }
 
         Task<bool> SaveChangesAsync(CancellationToken ct = default);
     }

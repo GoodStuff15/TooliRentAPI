@@ -3,6 +3,7 @@ using AutoMapper;
 using Domain.DTOs;
 using Domain.DTOs.ResponseDTOs;
 using Domain.Models;
+using Infrastructure;
 using Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -99,6 +100,15 @@ namespace Application.Services
             return entity.FirstOrDefault() == null ? null : _mapper.Map<BorrowerReadDTO>(entity.FirstOrDefault());
         }
 
+        public async Task<BorrowerReadDTO?> GetByUserIdAsync(string userId, CancellationToken ct)
+        {
+            var entity = await _unitOfWork.Borrowers.GetAsync(
+                filter: b => b.UserId == userId,
+                includeProperties: "Bookings",
+                ct: ct);
+            return entity.FirstOrDefault() == null ? null : _mapper.Map<BorrowerReadDTO>(entity.FirstOrDefault());
+        }
+
         public async Task<IEnumerable<BorrowerReadDTO>> GetAllFilteredAsync(BorrowerFilterDTO dto, CancellationToken ct = default)
         { 
             var allEntities = await _unitOfWork.Borrowers.GetAsync(includeProperties: "Bookings", ct: ct, filter: FilterFunction(dto));
@@ -133,6 +143,10 @@ namespace Application.Services
                                                            .Any());
         }
 
-
+        public async Task AddRefreshToken(RefreshToken rt, CancellationToken ct)
+        {
+            await _unitOfWork.Identity.AddRefreshTokenAsync(rt, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
+        }
     }
 }
