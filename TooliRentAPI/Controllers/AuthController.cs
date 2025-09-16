@@ -45,6 +45,10 @@ namespace Presentation.Controllers
 
             if (result.Succeeded)
             {
+                var currentUser = await _userManager.FindByNameAsync(user.UserName);
+
+                var roleResult = await _userManager.AddToRoleAsync(currentUser, "User");
+
                 return Ok(new { Message = "User registered successfully" });
             }
 

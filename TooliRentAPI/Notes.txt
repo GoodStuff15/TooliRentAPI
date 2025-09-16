@@ -36,11 +36,11 @@
             4. **Hämta / lämna tillbaka**
                 - Markera att verktyget har hämtats ut                          check
                 - Markera att verktyget har återlämnats                         check
-                - Hantera försenade återlämningar                             XXXXXXXXXXX
+                - Hantera försenade återlämningar                               check
             5. **Admin-funktioner**
                 - CRUD-operationer på verktyg                                   check
                 - CRUD-operationer på verktygskategorier                        check
-                - Hantera användare (aktivera/inaktivera)                     XXXXXXXXXXX
+                - Hantera användare (aktivera/inaktivera)                       check
                 - Se statistik över utlåning och användning                   XXXXXXXXXXX
 
 
