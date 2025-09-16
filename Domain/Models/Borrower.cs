@@ -27,6 +27,8 @@ namespace Domain.Models
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
+        public ICollection<LateFee> LateFees { get; set; } = new List<LateFee>();
+
 
     }
 }

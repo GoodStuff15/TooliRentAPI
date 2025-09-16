@@ -4,6 +4,7 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ToolContext))]
-    partial class ToolContextModelSnapshot : ModelSnapshot
+    [Migration("20250916110911_abookingseed")]
+    partial class abookingseed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,6 +222,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
 
+                    b.Property<int>("BookingId1")
+                        .HasColumnType("int");
+
                     b.Property<int?>("BorrowerId")
                         .HasColumnType("int");
 
@@ -229,6 +235,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookingId1");
 
                     b.HasIndex("BorrowerId");
 
@@ -793,9 +801,17 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Models.LateFee", b =>
                 {
+                    b.HasOne("Domain.Models.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Models.Borrower", null)
                         .WithMany("LateFees")
                         .HasForeignKey("BorrowerId");
+
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("Domain.Models.Tool", b =>

@@ -50,6 +50,6 @@ namespace Domain.Models
 
         public ICollection<Tool> Tools { get; set; } = new List<Tool>();
 
-        
+        public int? LateFeeId { get; set; }
     }
 }

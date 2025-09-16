@@ -24,6 +24,8 @@ namespace Infrastructure
         public DbSet<ToolType> ToolTypes { get; set; }
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<LateFee> LateFees { get; set; }
+
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,6 +34,10 @@ namespace Infrastructure
 
             modelBuilder.Entity<Category>()
                 .Property(p => p.DelayPrice)
+                .HasPrecision(10, 2);
+
+            modelBuilder.Entity<LateFee>()
+                .Property(p => p.Amount)
                 .HasPrecision(10, 2);
 
             SeedData(modelBuilder);
@@ -118,11 +124,11 @@ namespace Infrastructure
                 new Borrower { Id = 1, FirstName = "Gustav", LastName = "Eriksson", IsActive = true, Address = "Wayvay 8", Email = "gustav@swedbonk.se", PhoneNumber = "070881220", UserId = "9debe80a-df48-4525-94af-be01f484f601" }
 
             );
-            
-            //// Seed Bookings
-            //modelBuilder.Entity<Booking>().HasData(
-            //    new Booking { Id = 1, WasPickedUp = true, BorrowerId = 1, StartDate = DateOnly.FromDateTime(DateTime.Now), EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5)), IsActive = true, }
-            //);
+
+            // Seed Bookings
+            modelBuilder.Entity<Booking>().HasData(
+                new Booking { Id = 2, WasPickedUp = true, BorrowerId = 1, StartDate = new DateOnly(2025,09,10), EndDate = new DateOnly(2025,09,14), IsActive = true }
+            );
 
         }
     }
