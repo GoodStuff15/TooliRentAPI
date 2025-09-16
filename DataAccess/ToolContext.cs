@@ -113,16 +113,16 @@ namespace Infrastructure
                 new Tool { Id = 20, Name = "Garant Garden Rake", Description = "Durable garden rake for soil preparation.", IsAvailable = true, ToolTypeId = 10 }
             );
 
-            //// Seed Borrowers
-            //modelBuilder.Entity<Borrower>().HasData(
-            //    new Borrower { Id = 1, FirstName = "Alice", LastName = "Johnson", IsActive = true },
-            //    new Borrower { Id = 2, FirstName = "Michael", LastName = "Smith", IsActive = true },
-            //    new Borrower { Id = 3, FirstName = "Sophie", LastName = "Williams", IsActive = true },
-            //    new Borrower { Id = 4, FirstName = "David", LastName = "Brown", IsActive = true },
-            //    new Borrower { Id = 5, FirstName = "Emma", LastName = "Davis", IsActive = true }
+            // Seed Borrowers
+            modelBuilder.Entity<Borrower>().HasData(
+                new Borrower { Id = 1, FirstName = "Gustav", LastName = "Eriksson", IsActive = true, Address = "Wayvay 8", Email = "gustav@swedbonk.se", PhoneNumber = "070881220", UserId = "9debe80a-df48-4525-94af-be01f484f601" }
+
+            );
+            
+            //// Seed Bookings
+            //modelBuilder.Entity<Booking>().HasData(
+            //    new Booking { Id = 1, WasPickedUp = true, BorrowerId = 1, StartDate = DateOnly.FromDateTime(DateTime.Now), EndDate = DateOnly.FromDateTime(DateTime.Now.AddDays(5)), IsActive = true, }
             //);
-
-
 
         }
     }
