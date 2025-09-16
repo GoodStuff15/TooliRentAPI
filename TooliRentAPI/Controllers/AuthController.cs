@@ -1,6 +1,7 @@
 ﻿using Application.Services;
 using Domain.DTOs.IdentityDTOs;
 using Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
@@ -134,6 +135,7 @@ namespace Presentation.Controllers
             return Ok("Logged out successfully.");  
         }
 
+        [Authorize(Roles="Admin, User")]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO dto)
         {
@@ -151,6 +153,19 @@ namespace Presentation.Controllers
             return Ok("Password changed successfully.");
         }
 
+        [Authorize(Roles ="Admin")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if(user == null)
+            {
+                return NotFound("User not found.");
+            }
+            await _userManager.DeleteAsync(user);
+            await RevokeAllUserRefreshTokens(user.Id);
+            return Ok("User deleted");
+        }
 
 
 
