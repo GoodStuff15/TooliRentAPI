@@ -204,7 +204,7 @@ namespace Application.Services
             IEnumerable<Booking> bookings;
             if (late)
             {
-                bookings = await _unitOfWork.Bookings.GetAsync(filter: b => b.EndDate < today && b.IsActive, includeProperties: "Tools", ct: ct);
+                bookings = await _unitOfWork.Bookings.GetAsync(filter: b => b.EndDate < today && b.IsActive && !b.WasReturned && b.WasPickedUp, includeProperties: "Tools", ct: ct);
             }
             else
             {
