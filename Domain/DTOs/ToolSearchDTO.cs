@@ -12,5 +12,9 @@ namespace Domain.DTOs
         public int? TypeId { get; init; }
         public int? CategoryId { get; init; }
         public bool? Availability { get; init; }
+
+        public DateOnly? StartDate { get; init; }
+
+        public DateOnly? EndDate { get; init; }
     }
 }

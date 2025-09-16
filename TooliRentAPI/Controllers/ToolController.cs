@@ -27,14 +27,17 @@ namespace Presentation.Controllers
 
         [HttpGet("FilterSearch")]
         public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetBySearchFilter([FromQuery] string? nameFilter,
-                                                                  int? typeId, int? categoryId, bool? availability, CancellationToken ct = default)
+                                                                  int? typeId, int? categoryId, bool? availability,
+                                                                  DateOnly? start, DateOnly? end, CancellationToken ct = default)
         {
             var dto = new ToolSearchDTO
             {
                 NameFilter = nameFilter,
                 TypeId = typeId,
                 CategoryId = categoryId,
-                Availability = availability
+                Availability = availability,
+                StartDate = start,
+                EndDate = end
             };
 
 

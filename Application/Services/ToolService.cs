@@ -60,7 +60,7 @@ namespace Application.Services
         public async Task<IEnumerable<ToolReadDTO>> GetAllFilteredAsync(ToolSearchDTO dto, CancellationToken ct = default)
         {
             
-            var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType,ToolType.Category", ct, FilterFunction(dto));
+            var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "Booking,ToolType,ToolType.Category", ct, FilterFunction(dto));
             var result = new List<ToolReadDTO>();
             
             foreach (var tool in allEntities)
@@ -84,8 +84,10 @@ namespace Application.Services
         {
             return tool => (string.IsNullOrEmpty(dto.NameFilter) || tool.Name.Contains(dto.NameFilter)) &&
                            (!dto.TypeId.HasValue || tool.ToolTypeId == dto.TypeId.Value) &&
-                           (!dto.CategoryId.HasValue || tool.ToolType.CategoryId == dto.CategoryId.Value) &&
-                           (!dto.Availability.HasValue || tool.IsAvailable == dto.Availability.Value);
+                           (!dto.CategoryId.HasValue|| tool.ToolType.CategoryId == dto.CategoryId.Value) &&
+                           (!dto.Availability.HasValue || tool.IsAvailable == dto.Availability.Value) &&
+                           (!dto.StartDate.HasValue || tool.Booking.EndDate < dto.StartDate) && 
+                           (!dto.EndDate.HasValue || tool.Booking.StartDate > dto.EndDate);
 
         }
     }

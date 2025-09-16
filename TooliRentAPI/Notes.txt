@@ -11,31 +11,69 @@
             //       }
             //   });
 
+
+            // TANKAR / IDÉER
             
             * Kanske borde sparas data om när saker uppdaterats?
+            * Visa NÄR verktyg är bokat till och från?
 
 
             // TODO: API Funktionalitet
 
 
             1. **Registrera / logga in/ut**
-                - Skapa konto som medlem
-                - Erhålla JWT-token vid inloggning
-                - Förnya token vid behov
+                - Skapa konto som medlem                                        check
+                - Erhålla JWT-token vid inloggning                              check
+                - Förnya token vid behov                                        check
             2. **Se verktyg**
-                - Lista alla tillgängliga verktyg
-                - Filtrera verktyg efter kategori, status, tillgänglighet
-                - Visa detaljerad information om specifika verktyg
+                - Lista alla tillgängliga verktyg                               check
+                - Filtrera verktyg efter kategori, status, tillgänglighet       check
+                - Visa detaljerad information om specifika verktyg              ?
             3. **Boka verktyg**
-                - Boka ett eller flera verktyg för en kommande period 
-                - Se egna bokningar och status
-                - Avboka bokningar
+                - Boka ett eller flera verktyg för en kommande period           check
+                - Se egna bokningar och status                                  check
+                - Avboka bokningar                                              check
             4. **Hämta / lämna tillbaka**
-                - Markera att verktyget har hämtats ut
-                - Markera att verktyget har återlämnats
-                - Hantera försenade återlämningar
+                - Markera att verktyget har hämtats ut                          check
+                - Markera att verktyget har återlämnats                         check
+                - Hantera försenade återlämningar                             XXXXXXXXXXX
             5. **Admin-funktioner**
-                - CRUD-operationer på verktyg
-                - CRUD-operationer på verktygskategorier
-                - Hantera användare (aktivera/inaktivera)
-                - Se statistik över utlåning och användning
+                - CRUD-operationer på verktyg                                   check
+                - CRUD-operationer på verktygskategorier                        check
+                - Hantera användare (aktivera/inaktivera)                     XXXXXXXXXXX
+                - Se statistik över utlåning och användning                   XXXXXXXXXXX
+
+
+
+                // TODO: Other
+
+
+            **Tekniska krav**
+
+            Projektet ska uppfylla följande tekniska krav:
+
+            1. **Arkitektur**
+                - N-tier arkitektur med tydlig separation mellan:
+                    - Presentation (API Controllers)
+                    - Application (Services)
+                    - Domain (Entities, Interfaces)
+                    - Infrastructure (Repositories, DB Context)
+            2. **Designmönster**
+                - Service pattern för applikations-/domänlogik
+                - Repository pattern för dataaccess
+            3. **DTO & Mappning**
+                - Använd AutoMapper eller motsvarande för Entity/DTO-mappning
+                - Tydlig separation mellan interna modeller och externa DTO:er
+            4. **Validering**
+                - FluentValidation eller annat verktyg för validering av inkommande DTO:er
+                - Domänregler valideras separat från DTO-valideringen
+            5. **Autentisering & Auktorisering**
+                - JWT Bearer authentication
+                - Rollbaserad auktorisering med rollerna **Member** och **Admin**
+            6. **Databas**
+                - Relationell databas (SQL Server eller PostgreSQL)
+                - Code-first approach med migrationer
+                - Seed data för utveckling och testning
+            7. **Dokumentation**
+                - OpenAPI/Swagger-dokumentation för alla endpoints
+                - README som beskriver arkitektur, körning och API-flöden
