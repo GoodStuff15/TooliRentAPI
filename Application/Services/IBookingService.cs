@@ -27,5 +27,8 @@ namespace Application.Services
         Task<bool> PickupBooking(int id, CancellationToken ct = default);
 
         public Task<IEnumerable<BookingReadDTO>> GetLateBookings(bool late, CancellationToken ct = default);
+
+        public Task<bool> UpdateLateBookings(CancellationToken ct = default);
+
     }
 }

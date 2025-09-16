@@ -94,6 +94,14 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
+        [HttpPut("late/update")]
+        public async Task<IActionResult> UpdateLateBookings(CancellationToken ct = default)
+        {
+            await _bookingService.UpdateLateBookings(ct);
+
+            return Ok("Late bookings updated");
+        }
+
         [Authorize(Roles = "Admin, User")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id, CancellationToken ct = default)

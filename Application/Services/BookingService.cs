@@ -217,5 +217,42 @@ namespace Application.Services
             }
             return result;
         }
+
+        public async Task<bool> UpdateLateBookings(CancellationToken ct = default)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            var lateBookings = await _unitOfWork.Bookings.GetAsync(filter: b => b.EndDate < today && b.IsActive && !b.WasReturned && b.WasPickedUp, includeProperties: "Tools", ct: ct);
+            foreach(var booking in lateBookings)
+            {
+                if(booking.LateFeeId == null)
+                {
+                    // Create a new late fee record if it doesn't exist
+                    var newLateFee = new LateFee
+                    {
+                        BookingId = booking.Id,
+                        Amount = 10.00m, // Initial late fee amount
+                        DateIncurred = DateOnly.FromDateTime(DateTime.Now)
+                    };
+                    await _unitOfWork.LateFees.AddAsync(newLateFee, ct);
+                    await _unitOfWork.SaveChangesAsync(ct); // Save to get the new LateFee ID
+                    booking.LateFeeId = newLateFee.Id;
+                    await _unitOfWork.Bookings.UpdateAsync(booking, ct);
+                    await _unitOfWork.SaveChangesAsync(ct);
+                }
+                else
+                {   // If a late fee record exists, increment the amount
+                    var existingFee = await _unitOfWork.LateFees.GetByIdAsync((int)booking.LateFeeId, ct);
+                    if (existingFee != null)
+                    {
+                        existingFee.Amount += 10.00m; // Increment by $10 for each day late
+                        await _unitOfWork.LateFees.UpdateAsync(existingFee, ct);
+                        await _unitOfWork.SaveChangesAsync(ct);
+                    }
+                }
+                
+                
+            }
+            return await _unitOfWork.SaveChangesAsync(ct);
+        }
     }
 }

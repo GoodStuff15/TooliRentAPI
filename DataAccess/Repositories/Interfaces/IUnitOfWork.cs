@@ -21,6 +21,8 @@ namespace Infrastructure.Repositories.Interfaces
 
         IdentityRepository Identity { get; }
 
+        LateFeeRepository LateFees { get; }
+
         Task<bool> SaveChangesAsync(CancellationToken ct = default);
     }
 }

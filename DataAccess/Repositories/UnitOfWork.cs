@@ -18,6 +18,7 @@ namespace Infrastructure.Repositories
         private BookingRepository? _bookingRepo;
         private BorrowerRepository? _borrowerRepo;
         private IdentityRepository? _identityRepo;
+        private LateFeeRepository? _lateFeeRepo;
 
         public ToolRepository Tools => _toolRepo ??= new ToolRepository(_context);
         public CategoryRepository Categories => _categoryRepo ??= new CategoryRepository(_context);
@@ -25,6 +26,8 @@ namespace Infrastructure.Repositories
         public BookingRepository Bookings => _bookingRepo ??= new BookingRepository(_context);
         public BorrowerRepository Borrowers => _borrowerRepo ??= new BorrowerRepository(_context);
         public IdentityRepository Identity => _identityRepo ??= new IdentityRepository(_context);
+
+        public LateFeeRepository LateFees => _lateFeeRepo ??= new LateFeeRepository(_context);
 
         public UnitOfWork(ToolContext context)
         {
