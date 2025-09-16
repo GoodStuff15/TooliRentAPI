@@ -91,9 +91,7 @@ namespace Application.Services
             return tool => (string.IsNullOrEmpty(dto.NameFilter) || tool.Name.Contains(dto.NameFilter)) &&
                            (!dto.TypeId.HasValue || tool.ToolTypeId == dto.TypeId.Value) &&
                            (!dto.CategoryId.HasValue || tool.ToolType.CategoryId == dto.CategoryId.Value) &&
-                           (!dto.Availability.HasValue || tool.IsAvailable == dto.Availability.Value); //&&
-                           //(!dto.StartDate.HasValue || tool.Bookings.Any(x => x.StartDate > dto.EndDate)) &&
-                           //(!dto.EndDate.HasValue || tool.Bookings.Any(x => x.EndDate < dto.StartDate));
+                           (!dto.Availability.HasValue || tool.IsAvailable == dto.Availability.Value); 
 
         }
 
