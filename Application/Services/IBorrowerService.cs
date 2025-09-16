@@ -23,5 +23,7 @@ namespace Application.Services
         public Task<BorrowerReadDTO?> GetByUserIdAsync(string userId, CancellationToken ct);
 
         public Task AddRefreshToken(RefreshToken rt, CancellationToken ct);
+
+        public Task<bool> UpdateStatus(int id, CancellationToken ct = default);
     }
 }

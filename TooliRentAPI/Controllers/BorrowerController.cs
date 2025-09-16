@@ -117,5 +117,19 @@ namespace Presentation.Controllers
             }
             return Ok();
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("/active/{id}")]
+        public async Task<IActionResult> HandleActiveStatus(int id, CancellationToken ct)
+        {
+            var result = await _borrowerService.UpdateStatus(id, ct);
+
+            if(!result)
+            {
+                return Problem();
+            }
+
+            return Ok("Status of user updated");
+        }
     }
 }

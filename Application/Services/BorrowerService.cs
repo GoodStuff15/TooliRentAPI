@@ -143,10 +143,38 @@ namespace Application.Services
                                                            .Any());
         }
 
-        public async Task AddRefreshToken(RefreshToken rt, CancellationToken ct)
+        public async Task AddRefreshToken(RefreshToken rt, CancellationToken ct = default)
         {
             await _unitOfWork.Identity.AddRefreshTokenAsync(rt, ct);
             await _unitOfWork.SaveChangesAsync(ct);
+        }
+
+        public async Task<bool> UpdateStatus(int id, CancellationToken ct = default)
+        {
+            var toUpdate = await _unitOfWork.Borrowers.GetByIdAsync(id, ct);
+
+            if (toUpdate == null)
+                return false;
+
+            if(toUpdate.IsActive == true)
+            {
+                toUpdate.IsActive = false;
+            }
+            else if(toUpdate.IsActive == false)
+            {
+                toUpdate.IsActive = true;
+            }
+            else
+            {
+                throw new Exception("Error with user IsActive variable");
+            }
+
+
+            await _unitOfWork.Borrowers.UpdateAsync(toUpdate);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+            
         }
     }
 }
