@@ -41,6 +41,14 @@ namespace Presentation.Controllers
             return Ok(booking);
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet("late/{late}")]
+        public async Task<ActionResult<IEnumerable<BookingReadDTO>>> GetLateBookings(bool late, CancellationToken ct = default)
+        {
+            var bookings = await _bookingService.GetLateBookings(late, ct);
+            return Ok(bookings);
+        }
+
         [Authorize(Roles = "Admin, User")]
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<BookingReadDTO>>> GetBookingsByUserId(int userId, CancellationToken ct = default)

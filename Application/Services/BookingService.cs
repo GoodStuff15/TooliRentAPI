@@ -197,5 +197,25 @@ namespace Application.Services
             return await _unitOfWork.SaveChangesAsync(ct);
 
         }
+
+        public async Task<IEnumerable<BookingReadDTO>> GetLateBookings(bool late, CancellationToken ct = default)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            IEnumerable<Booking> bookings;
+            if (late)
+            {
+                bookings = await _unitOfWork.Bookings.GetAsync(filter: b => b.EndDate < today && b.IsActive, includeProperties: "Tools", ct: ct);
+            }
+            else
+            {
+                bookings = await _unitOfWork.Bookings.GetAsync(filter: b => b.EndDate >= today || !b.IsActive, includeProperties: "Tools", ct: ct);
+            }
+            var result = new List<BookingReadDTO>();
+            foreach(var booking in bookings)
+            {
+                result.Add(_mapper.Map<BookingReadDTO>(booking));
+            }
+            return result;
+        }
     }
 }
