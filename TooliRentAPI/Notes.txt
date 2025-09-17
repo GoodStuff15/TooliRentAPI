@@ -16,6 +16,7 @@
             
             * Kanske borde sparas data om när saker uppdaterats?
             * Visa NÄR verktyg är bokat till och från?
+            * Glöm inte att söka efter "//FIX" i koden för att se vad som är kvar att göra
 
 
             // TODO: API Funktionalitet

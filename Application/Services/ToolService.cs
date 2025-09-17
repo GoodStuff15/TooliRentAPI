@@ -57,6 +57,17 @@ namespace Application.Services
             return result;
         }
 
+        public async Task<IEnumerable<ToolReadShorthandDTO>> GetAllOverviewAsync(CancellationToken ct = default)
+        {
+            var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType,ToolType.Category", ct);
+            var result = new List<ToolReadShorthandDTO>();
+            foreach (var tool in allEntities)
+            {
+                result.Add(_mapper.Map<ToolReadShorthandDTO>(tool));
+            }
+            return result;
+        }
+
         public async Task<IEnumerable<ToolReadDTO>> GetAllFilteredAsync(ToolSearchDTO dto, CancellationToken ct = default)
         {
             
@@ -76,14 +87,16 @@ namespace Application.Services
             return result;
         }
 
-        public Task<ToolReadDTO?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<ToolReadDTO?> GetByIdAsync(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var tool = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType", ct, tool => tool.Id == id);
+
+            return _mapper.Map<ToolReadDTO>(tool.FirstOrDefault());
         }
 
         public Task<bool> UpdateAsync(int id, ToolUpdateDTO dto, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(); // FIX
         }
 
         public Expression<Func<Tool, bool>> FilterFunction(ToolSearchDTO dto)
