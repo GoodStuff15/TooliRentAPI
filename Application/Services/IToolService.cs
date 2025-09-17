@@ -18,5 +18,7 @@ namespace Application.Services
         Task<bool> UpdateAsync(int id, ToolUpdateDTO dto, CancellationToken ct = default);
         Task<bool> DeleteAsync(int id, CancellationToken ct = default);
 
+        Task<IEnumerable<ToolReadShorthandDTO>> GetAllOverviewAsync(CancellationToken ct = default);
+
     }
 }

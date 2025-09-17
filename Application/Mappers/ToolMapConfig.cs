@@ -23,6 +23,11 @@ namespace Application.Mappers
                 opt => opt.MapFrom(src => src.ToolType.Category.Name));
             CreateMap<ToolUpdateDTO, Tool>();
             CreateMap<ToolCreateDTO, Tool>();
+            CreateMap<Tool, ToolReadShorthandDTO>()
+                .ForMember(dest => dest.TypeName,
+                opt => opt.MapFrom(src => src.ToolType.Name))
+                .ForMember(dest => dest.CategoryName,
+                opt => opt.MapFrom(src => src.ToolType.Category.Name));
         }
     }
 }

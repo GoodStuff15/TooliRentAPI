@@ -18,10 +18,41 @@ namespace Presentation.Controllers
             _toolService = toolService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetAll(CancellationToken ct = default)
         {
             var result = await _toolService.GetAllAsync(ct);
+
+            if(result == null)
+            {
+               return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [Authorize(Roles ="Admin, User")]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ToolReadDTO>> GetToolDetails(int id, CancellationToken ct)
+        {
+            var result = await _toolService.GetByIdAsync(id, ct);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
+
+        [Authorize(Roles ="Admin, User")]
+        [HttpGet("Overview")]
+        public async Task<ActionResult<IEnumerable<ToolReadShorthandDTO>>> GetAllOverview(CancellationToken ct = default)
+        {
+            var result = await _toolService.GetAllOverviewAsync(ct);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            
             return Ok(result);
         }
 
