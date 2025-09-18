@@ -172,6 +172,7 @@ builder.Services.AddScoped<IToolTypeService, ToolTypeService>();
 builder.Services.AddScoped<IToolService, ToolService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IBorrowerService, BorrowerService>();
+builder.Services.AddScoped<IStatisticsService, StatisticsService>();    
 
 var app = builder.Build();
 
