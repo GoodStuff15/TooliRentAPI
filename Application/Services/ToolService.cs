@@ -2,6 +2,7 @@
 using Domain.DTOs;
 using Domain.Models;
 using Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace Application.Services
         public async Task<IEnumerable<ToolReadDTO>> GetAllAsync(CancellationToken ct = default)
         {
             var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "ToolType", ct);
-           
+
             var result = new List<ToolReadDTO>();
 
             foreach (var tool in allEntities)
@@ -56,6 +57,7 @@ namespace Application.Services
 
             return result;
         }
+
 
         public async Task<IEnumerable<ToolReadShorthandDTO>> GetAllOverviewAsync(CancellationToken ct = default)
         {
@@ -70,16 +72,16 @@ namespace Application.Services
 
         public async Task<IEnumerable<ToolReadDTO>> GetAllFilteredAsync(ToolSearchDTO dto, CancellationToken ct = default)
         {
-            
+
             var allEntities = await _unitOfWork.Tools.GetAsync(includeProperties: "Bookings,ToolType,ToolType.Category", ct, FilterFunction(dto));
-            
+
             if (dto.StartDate.HasValue && dto.EndDate.HasValue)
             {
                 allEntities = allEntities.Where(tool => CheckAvailability(tool, dto)).ToList();
             }
 
             var result = new List<ToolReadDTO>();
-            
+
             foreach (var tool in allEntities)
             {
                 result.Add(_mapper.Map<ToolReadDTO>(tool));
@@ -104,7 +106,7 @@ namespace Application.Services
             return tool => (string.IsNullOrEmpty(dto.NameFilter) || tool.Name.Contains(dto.NameFilter)) &&
                            (!dto.TypeId.HasValue || tool.ToolTypeId == dto.TypeId.Value) &&
                            (!dto.CategoryId.HasValue || tool.ToolType.CategoryId == dto.CategoryId.Value) &&
-                           (!dto.Availability.HasValue || tool.IsAvailable == dto.Availability.Value); 
+                           (!dto.Availability.HasValue || tool.IsAvailable == dto.Availability.Value);
 
         }
 
@@ -112,18 +114,36 @@ namespace Application.Services
         {
             foreach (var booking in tool.Bookings)
             {
-              
-                    // Check if the booking overlaps with the desired date range
-                    bool overlaps = booking.StartDate < dto.EndDate && booking.EndDate > dto.StartDate;
-                    if (overlaps)
-                    {
-                        return false; // Tool is not available in the desired date range
-                    }
-                
-                    
-                
+
+                // Check if the booking overlaps with the desired date range
+                bool overlaps = booking.StartDate < dto.EndDate && booking.EndDate > dto.StartDate;
+                if (overlaps)
+                {
+                    return false; // Tool is not available in the desired date range
+                }
+
+
+
             }
             return true;
+        }
+
+        public async Task<bool> ChangeAvailability(int id, CancellationToken ct = default)
+        {
+            var tool = await _unitOfWork.Tools.GetByIdAsync(id, ct);
+            if (tool == null) return false;
+
+            if (tool.IsAvailable)
+            {
+                tool.IsAvailable = false;
+            }
+            else if (!tool.IsAvailable)
+            {
+                tool.IsAvailable = true;
+            }
+
+            await _unitOfWork.Tools.UpdateAsync(tool);
+            return await _unitOfWork.SaveChangesAsync(ct);
         }
     }
 }

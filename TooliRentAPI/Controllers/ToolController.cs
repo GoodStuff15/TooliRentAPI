@@ -109,5 +109,17 @@ namespace Presentation.Controllers
             }
             return Ok("Tool deleted");
         }
+
+        [Authorize(Roles ="Admin, User")]
+        [HttpPut("ChangeAvailability/{id}")]
+        public async Task<IActionResult> ChangeAvailability(int id, CancellationToken ct)
+        {
+            var update = await _toolService.ChangeAvailability(id, ct);
+            if(!update)
+            {
+                return NotFound("Tool not found");
+            }
+            return Ok();
+        }
     }
 }

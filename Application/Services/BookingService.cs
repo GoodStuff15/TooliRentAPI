@@ -63,6 +63,7 @@ namespace Application.Services
             {
                 Success = true,
                 Message = "Booking created successfully.",
+                BookingId = toCreate.Id,
                 BookingDetails = _mapper.Map<BookingReceiptDTO>(toCreate)
             };
             
