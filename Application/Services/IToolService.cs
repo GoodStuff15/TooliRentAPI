@@ -20,5 +20,6 @@ namespace Application.Services
 
         Task<IEnumerable<ToolReadShorthandDTO>> GetAllOverviewAsync(CancellationToken ct = default);
 
+        Task<bool> ChangeAvailability(int id, CancellationToken ct = default);
     }
 }
