@@ -56,22 +56,9 @@ namespace Presentation.Controllers
             return Ok(result);
         }
 
-        [HttpGet("FilterSearch")]
-        public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetBySearchFilter([FromQuery] string? nameFilter,
-                                                                  int? typeId, int? categoryId, bool? availability,
-                                                                  DateOnly? start, DateOnly? end, CancellationToken ct = default)
+        [HttpPost("FilterSearch")]
+        public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetBySearchFilter([FromBody] ToolSearchDTO dto, CancellationToken ct)
         {
-            var dto = new ToolSearchDTO
-            {
-                NameFilter = nameFilter,
-                TypeId = typeId,
-                CategoryId = categoryId,
-                Availability = availability,
-                StartDate = start,
-                EndDate = end
-            };
-
-
             var filteredTools = await _toolService.GetAllFilteredAsync(dto, ct);
             return Ok(filteredTools);
         }
