@@ -5,6 +5,7 @@ using Domain.DTOs.ResponseDTOs;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Repositories.Interfaces;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -176,6 +177,8 @@ namespace Application.Services
 
             if (bookingToExtend == null) return false;
 
+            if(newEndDate > bookingToExtend.EndDate.AddDays(Business_Parameters.MaxExtensionDays)) return false;
+
             // Update the end date
             bookingToExtend.EndDate = newEndDate;
             await _unitOfWork.Bookings.UpdateAsync(bookingToExtend, ct);
@@ -219,6 +222,7 @@ namespace Application.Services
             return result;
         }
 
+        // Run this method daily via a scheduled job to update late bookings and apply/increment late fees
         public async Task<bool> UpdateLateBookings(CancellationToken ct = default)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
@@ -231,7 +235,7 @@ namespace Application.Services
                     var newLateFee = new LateFee
                     {
                         BookingId = booking.Id,
-                        Amount = 10.00m, // Initial late fee amount
+                        Amount = Business_Parameters.LateFee, // Initial late fee amount
                         DateIncurred = DateOnly.FromDateTime(DateTime.Now)
                     };
                     await _unitOfWork.LateFees.AddAsync(newLateFee, ct);
@@ -245,7 +249,7 @@ namespace Application.Services
                     var existingFee = await _unitOfWork.LateFees.GetByIdAsync((int)booking.LateFeeId, ct);
                     if (existingFee != null)
                     {
-                        existingFee.Amount += 10.00m; // Increment by $10 for each day late
+                        existingFee.Amount += Business_Parameters.LateFee; // Increment by $10 for each day late
                         await _unitOfWork.LateFees.UpdateAsync(existingFee, ct);
                         await _unitOfWork.SaveChangesAsync(ct);
                     }
