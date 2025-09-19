@@ -56,6 +56,7 @@ namespace Presentation.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpPost("FilterSearch")]
         public async Task<ActionResult<IEnumerable<ToolReadDTO>>> GetBySearchFilter([FromBody] ToolSearchDTO dto, CancellationToken ct)
         {

@@ -68,7 +68,6 @@ namespace Presentation.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-
             var response = await _bookingService.CreateBooking(dto, ct);
             if (!response.Success)
             {
@@ -94,6 +93,9 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
+        // Endpoint to check which bookings are late and change their status
+
+        [Authorize(Roles ="Admin")]
         [HttpPut("late/update")]
         public async Task<IActionResult> UpdateLateBookings(CancellationToken ct = default)
         {
@@ -102,7 +104,7 @@ namespace Presentation.Controllers
             return Ok("Late bookings updated");
         }
 
-        [Authorize(Roles = "Admin, User")]
+        [Authorize(Roles ="Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id, CancellationToken ct = default)
         {
@@ -111,7 +113,7 @@ namespace Presentation.Controllers
             {
                 return NotFound();
             }
-            return NoContent();
+            return Ok("Booking deleted");
         }
 
         [Authorize(Roles = "Admin")]
@@ -126,7 +128,7 @@ namespace Presentation.Controllers
             return Ok("Booking returned");
         }
 
-        [Authorize(Roles = "Admin, User")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("extend/{id}")]
         public async Task<IActionResult> ExtendBooking(int id, [FromQuery] DateOnly newEndDate, CancellationToken ct = default)
         {
