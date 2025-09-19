@@ -18,14 +18,15 @@ namespace Presentation.Controllers
             _service = service;
         }
 
-        
+
+        [Authorize(Roles = "Admin, User")]
         [HttpGet]
         public async Task<IActionResult> GetAllToolTypes(CancellationToken ct)
         {
             var result = await _service.GetAllAsync();
             return Ok(result);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<ToolTypeReadDTO>> GetToolType(int id, CancellationToken ct)
         {

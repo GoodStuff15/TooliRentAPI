@@ -42,7 +42,7 @@ namespace Presentation.Controllers
             return Ok(borrowers);
         }
 
-        [Authorize(Roles = "Admin, User")]
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<BorrowerReadDTO>> GetBorrowerById(int id, CancellationToken ct)
         {

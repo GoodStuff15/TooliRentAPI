@@ -18,6 +18,7 @@ namespace Presentation.Controllers
             _statisticsService = statisticsService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("UserStatistics")]
         public async Task<ActionResult<UserStatisticsDTO>> GetUserStatistics(CancellationToken ct)
         {
