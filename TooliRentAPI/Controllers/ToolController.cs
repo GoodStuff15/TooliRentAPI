@@ -45,6 +45,7 @@ namespace Presentation.Controllers
 
         [Authorize(Roles ="Admin, User")]
         [HttpGet("Overview")]
+        [ResponseCache(CacheProfileName = "Default30")]
         public async Task<ActionResult<IEnumerable<ToolReadShorthandDTO>>> GetAllOverview(CancellationToken ct = default)
         {
             var result = await _toolService.GetAllOverviewAsync(ct);
