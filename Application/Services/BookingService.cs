@@ -165,18 +165,24 @@ namespace Application.Services
 
             return await _unitOfWork.SaveChangesAsync(ct);
         }
-        public async Task<bool> ExtendBooking(int id, DateOnly newEndDate, CancellationToken ct = default)
+        public async Task<BookingUpdate_ResponseDTO> ExtendBooking(int id, DateOnly newEndDate, CancellationToken ct = default)
         {
             var bookingToExtend = await _unitOfWork.Bookings.GetByIdAsync(id, ct);  
 
-            if (bookingToExtend == null) return false;
+            var validationResponse = await _validator.ValidateExtendBooking(bookingToExtend.Id, newEndDate);
 
-            if(newEndDate > bookingToExtend.EndDate.AddDays(Business_Parameters.MaxExtensionDays)) return false;
+            if(!validationResponse.Success)
+            {
+                return validationResponse;
+            }
 
             // Update the end date
             bookingToExtend.EndDate = newEndDate;
+            validationResponse.Message = "Booking successfully extended.";
             await _unitOfWork.Bookings.UpdateAsync(bookingToExtend, ct);
-            return await _unitOfWork.SaveChangesAsync(ct);
+            await _unitOfWork.SaveChangesAsync(ct);
+
+            return validationResponse; 
 
         }
 

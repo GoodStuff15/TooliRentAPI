@@ -10,12 +10,24 @@ namespace Application.Validators.BusinessValidation
 {
     public interface IBooking_Validation
     {
-        public Task<IEnumerable<int>> AreToolsAvailable(IEnumerable<int> toolIds);
+        Task<IEnumerable<int>> AreToolsAvailable(IEnumerable<int> toolIds);
+        Task<bool> IsBorrowerActive(int borrowerId);
+        Task<bool> DoesBookingExist(int bookingId);
+        Task<bool> IsBookingActive(int bookingId);
+        Task<bool> IsBookingAlreadyReturned(int bookingId);
+        Task<bool> IsBookingAlreadyPickedUp(int bookingId);
+        Task<bool> IsBookingOverdue(int bookingId);
+        Task<bool> IsBookingCompleted(int bookingId);
+        Task<bool> DoesBorrowerExist(int borrowerId);
+        Task<bool> DoToolsExist(IEnumerable<int> toolIds);
+        Task<bool> IsBookingWithinToolAvailability(IEnumerable<int> toolIds);
+        Task<bool> CanBookingBeExtended(int bookingId);
+        Task<bool> IsExtensionWithinRange(int bookingId, DateOnly newEndDate);
+        bool IsDateRangeValid(DateOnly startDate, DateOnly endDate);
+        Task<bool> DoesBorrowerHaveOtherActiveBooking(int borrowerId);
 
-        public Task<bool> IsBorrowerActive(int borrowerId);
-
-        public Task<BookingCreate_ResponseDTO> ValidateCreateBooking(BookingCreateDTO dto);
-
-        public Task<BookingUpdate_ResponseDTO> ValidateUpdateBooking(BookingUpdateDTO dto);
+        Task<BookingCreate_ResponseDTO> ValidateCreateBooking(BookingCreateDTO dto);
+        Task<BookingUpdate_ResponseDTO> ValidateUpdateBooking(BookingUpdateDTO dto);
+        Task<BookingUpdate_ResponseDTO> ValidateExtendBooking(int bookingId, DateOnly newEndDate);
     }
 }

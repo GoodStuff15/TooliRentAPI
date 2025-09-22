@@ -203,5 +203,16 @@ namespace Application.Validators.BusinessValidation
                            .IsBookingCancelled(await IsBookingCompleted(dto.BookingId))
                            .UpdateResponse();
         }
+
+        public async Task<BookingUpdate_ResponseDTO> ValidateExtendBooking(int bookingId, DateOnly newEndDate)
+        {
+            return _responseBuilder.DoesBookingExist(await DoesBookingExist(bookingId))
+                           .IsBookingActive(await IsBookingActive(bookingId))
+                           .IsBookingAlreadyReturned(await IsBookingAlreadyReturned(bookingId))
+                           .IsBookingCancelled(await IsBookingCompleted(bookingId))
+                           .CanBookingBeExtended(await CanBookingBeExtended(bookingId))
+                           .IsExtensionWithinRange(await IsExtensionWithinRange(bookingId, newEndDate))
+                           .UpdateResponse();
+        }
     }
 }

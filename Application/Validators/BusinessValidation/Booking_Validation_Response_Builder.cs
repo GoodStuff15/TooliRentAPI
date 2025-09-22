@@ -168,6 +168,16 @@ namespace Application.Validators.BusinessValidation
             return this;
         }
 
+        public Booking_Validation_Response_Builder IsExtensionWithinRange(bool yes)
+        {
+            if(!yes)
+            {
+                _updateResponse.Success = false;
+                _updateResponse.Message += "The extension date is outside the allowable range.\n ";
+            }
+            return this;
+        }
+
 
         public BookingCreate_ResponseDTO CreateResponse()
             { return _createResponse; }
