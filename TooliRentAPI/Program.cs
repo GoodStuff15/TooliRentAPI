@@ -17,6 +17,7 @@ using FluentValidation;
 using Domain.DTOs;
 using Application.Validators;
 using Application.Validators.BusinessValidation;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,22 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddDbContext<ToolContext>(options => 
                                             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Rate - limiting
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 10,
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
 
 // CORS
 var CorsPolicy = "CorsPolicy";
@@ -192,8 +209,7 @@ app.UseAuthorization();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
+app.UseRateLimiter();
 
 
 app.MapControllers();
