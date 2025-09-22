@@ -31,14 +31,11 @@ namespace Application.Services
 
         public async Task<BookingCreate_ResponseDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default)
         {
-            var unavailable = await _validator.AreToolsAvailable(dto.ToolIds);
-            if (unavailable.Any())
+            var validationResponse = await _validator.ValidateCreateBooking(dto);
+
+            if (!validationResponse.Success)
             {
-                return new BookingCreate_ResponseDTO
-                {
-                    Success = false,
-                    Message = "The following tool IDs are not available: " + string.Join(", ", unavailable)
-                };
+                return validationResponse;
             }
 
             var toCreate = _mapper.Map<Booking>(dto);
@@ -59,14 +56,11 @@ namespace Application.Services
             await _unitOfWork.Bookings.AddAsync(toCreate, ct);
 
             await _unitOfWork.SaveChangesAsync(ct);
+            
+            validationResponse.BookingDetails = _mapper.Map<BookingReceiptDTO>(toCreate);
+            validationResponse.BookingId = toCreate.Id;
 
-            return new BookingCreate_ResponseDTO
-            {
-                Success = true,
-                Message = "Booking created successfully.",
-                BookingId = toCreate.Id,
-                BookingDetails = _mapper.Map<BookingReceiptDTO>(toCreate)
-            };
+            return validationResponse;
             
         }
 

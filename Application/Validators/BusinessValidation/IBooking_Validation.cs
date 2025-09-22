@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.DTOs;
+using Domain.DTOs.ResponseDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +13,9 @@ namespace Application.Validators.BusinessValidation
         public Task<IEnumerable<int>> AreToolsAvailable(IEnumerable<int> toolIds);
 
         public Task<bool> IsBorrowerActive(int borrowerId);
+
+        public Task<BookingCreate_ResponseDTO> ValidateCreateBooking(BookingCreateDTO dto);
+
+        public Task<BookingUpdate_ResponseDTO> ValidateUpdateBooking(BookingUpdateDTO dto);
     }
 }
