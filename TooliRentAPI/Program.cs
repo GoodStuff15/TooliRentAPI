@@ -18,6 +18,7 @@ using Domain.DTOs;
 using Application.Validators;
 using Application.Validators.BusinessValidation;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,7 +67,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ToolContext>(options => 
                                             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Rate - limiting
+// Rate-limiting
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -80,6 +81,18 @@ builder.Services.AddRateLimiter(options =>
                 QueueLimit = 0,
                 Window = TimeSpan.FromMinutes(1)
             }));
+});
+
+// Response-caching
+
+builder.Services.AddResponseCaching();
+builder.Services.AddControllers(options =>
+{
+    options.CacheProfiles.Add("Default30",
+        new CacheProfile()
+        {
+            Duration = 30
+        });
 });
 
 // CORS
@@ -203,6 +216,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(CorsPolicy);
+
+app.UseResponseCaching();
 // Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
