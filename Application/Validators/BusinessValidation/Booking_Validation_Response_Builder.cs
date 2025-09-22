@@ -16,14 +16,11 @@ namespace Application.Validators.BusinessValidation
         private BookingCreate_ResponseDTO _createResponse;
         private BookingUpdate_ResponseDTO _updateResponse;
 
-        private readonly IMapper _mapper;
 
-
-        public Booking_Validation_Response_Builder(IMapper mapper)
+        public Booking_Validation_Response_Builder()
         {
             _createResponse = new BookingCreate_ResponseDTO();
-            _updateResponse = new BookingUpdate_ResponseDTO();
-            _mapper = mapper;
+
         }
 
         public Booking_Validation_Response_Builder AreToolsAvailable(bool yes)
@@ -70,7 +67,7 @@ namespace Application.Validators.BusinessValidation
 
         public Booking_Validation_Response_Builder IsBookingAlreadyReturned(bool yes)
         {
-           if(!yes)
+           if(yes)
             {
                 _updateResponse.Success = false;
                 _updateResponse.Message += "The booking has already been returned.\n ";
@@ -80,7 +77,7 @@ namespace Application.Validators.BusinessValidation
 
         public Booking_Validation_Response_Builder IsBookingAlreadyPickedUp(bool yes)
         {
-            if(!yes)
+            if(yes)
             {
                 _updateResponse.Success = false;
                 _updateResponse.Message += "The booking has already been picked up.\n ";
@@ -90,7 +87,7 @@ namespace Application.Validators.BusinessValidation
 
         public Booking_Validation_Response_Builder IsBookingCancelled(bool yes)
         {
-           if(!yes)
+           if(yes)
             {
                 _updateResponse.Success = false;
                 _updateResponse.Message += "The booking has been cancelled.\n ";
@@ -100,7 +97,7 @@ namespace Application.Validators.BusinessValidation
 
         public Booking_Validation_Response_Builder IsBookingCompleted(bool yes)
         {
-            if(!yes)
+            if(yes)
             {
                 _updateResponse.Success = false;
                 _updateResponse.Message += "The booking has been completed.\n ";

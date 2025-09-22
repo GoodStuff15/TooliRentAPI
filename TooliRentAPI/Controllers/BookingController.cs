@@ -133,9 +133,9 @@ namespace Presentation.Controllers
         public async Task<IActionResult> ExtendBooking(int id, [FromQuery] DateOnly newEndDate, CancellationToken ct = default)
         {
             var result = await _bookingService.ExtendBooking(id, newEndDate, ct);
-            if (!result)
+            if (!result.Success)
             {
-                return NotFound();
+                return BadRequest(result.Message);
             }
             return Ok("Booking extended");
         }

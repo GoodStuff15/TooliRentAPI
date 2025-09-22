@@ -167,7 +167,17 @@ namespace Application.Services
         }
         public async Task<BookingUpdate_ResponseDTO> ExtendBooking(int id, DateOnly newEndDate, CancellationToken ct = default)
         {
-            var bookingToExtend = await _unitOfWork.Bookings.GetByIdAsync(id, ct);  
+            Booking? bookingToExtend = await _unitOfWork.Bookings.GetByIdAsync(id, ct);  
+
+            if(bookingToExtend == null)
+            {
+                return new BookingUpdate_ResponseDTO
+                {
+                    Success = false,
+                    Message = $"Booking with id {id} was not found"
+                };
+
+            }
 
             var validationResponse = await _validator.ValidateExtendBooking(bookingToExtend.Id, newEndDate);
 

@@ -12,10 +12,10 @@ namespace Application.Validators.BusinessValidation
     public class Booking_Validation : IBooking_Validation
     {
         private readonly IUnitOfWork _unitOfWork;
-        private Booking_Validation_Response_Builder _responseBuilder;
+        private IBooking_Validation_Response_Builder _responseBuilder;
 
    
-        public Booking_Validation(IUnitOfWork unitOfWork, Booking_Validation_Response_Builder responseBuilder)
+        public Booking_Validation(IUnitOfWork unitOfWork, IBooking_Validation_Response_Builder responseBuilder)
         {
             _unitOfWork = unitOfWork;
             _responseBuilder = responseBuilder;
