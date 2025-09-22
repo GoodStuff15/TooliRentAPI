@@ -6,15 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.DTOs.ResponseDTOs
 {
-    public record BookingCreate_ResponseDTO
+    public record BookingUpdate_ResponseDTO
     {
-        public bool Success { get; set; } = true;
-
+        public bool Success { get; set; }
         public string Message { get; set; } = string.Empty;
-
-        public int BookingId { get; set; }
-        
-        public BookingReceiptDTO? BookingDetails { get; set; }
 
     }
 }

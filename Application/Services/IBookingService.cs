@@ -19,10 +19,11 @@ namespace Application.Services
 
         Task<bool> UpdateBooking(int id, BookingUpdateDTO dto, CancellationToken ct = default);
 
+
         // NON-CRUD OPERATIONS
         Task<bool> CancelBooking(int id, CancellationToken ct = default);
         Task<bool> CompleteBooking(int id, CancellationToken ct = default);
-        Task<bool> ExtendBooking(int id, DateOnly newEndDate, CancellationToken ct = default);
+        Task<BookingUpdate_ResponseDTO> ExtendBooking(int id, DateOnly newEndDate, CancellationToken ct = default);
 
         Task<bool> PickupBooking(int id, CancellationToken ct = default);
 

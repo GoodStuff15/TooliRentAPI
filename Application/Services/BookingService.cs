@@ -5,6 +5,7 @@ using Domain.DTOs.ResponseDTOs;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Repositories.Interfaces;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,14 +31,11 @@ namespace Application.Services
 
         public async Task<BookingCreate_ResponseDTO> CreateBooking(BookingCreateDTO dto, CancellationToken ct = default)
         {
-            var unavailable = await _validator.AreToolsAvailable(dto.ToolIds);
-            if (unavailable.Any())
+            var validationResponse = await _validator.ValidateCreateBooking(dto);
+
+            if (!validationResponse.Success)
             {
-                return new BookingCreate_ResponseDTO
-                {
-                    Success = false,
-                    Message = "The following tool IDs are not available: " + string.Join(", ", unavailable)
-                };
+                return validationResponse;
             }
 
             var toCreate = _mapper.Map<Booking>(dto);
@@ -58,14 +56,11 @@ namespace Application.Services
             await _unitOfWork.Bookings.AddAsync(toCreate, ct);
 
             await _unitOfWork.SaveChangesAsync(ct);
+            
+            validationResponse.BookingDetails = _mapper.Map<BookingReceiptDTO>(toCreate);
+            validationResponse.BookingId = toCreate.Id;
 
-            return new BookingCreate_ResponseDTO
-            {
-                Success = true,
-                Message = "Booking created successfully.",
-                BookingId = toCreate.Id,
-                BookingDetails = _mapper.Map<BookingReceiptDTO>(toCreate)
-            };
+            return validationResponse;
             
         }
 
@@ -170,16 +165,34 @@ namespace Application.Services
 
             return await _unitOfWork.SaveChangesAsync(ct);
         }
-        public async Task<bool> ExtendBooking(int id, DateOnly newEndDate, CancellationToken ct = default)
+        public async Task<BookingUpdate_ResponseDTO> ExtendBooking(int id, DateOnly newEndDate, CancellationToken ct = default)
         {
-            var bookingToExtend = await _unitOfWork.Bookings.GetByIdAsync(id, ct);  
+            Booking? bookingToExtend = await _unitOfWork.Bookings.GetByIdAsync(id, ct);  
 
-            if (bookingToExtend == null) return false;
+            if(bookingToExtend == null)
+            {
+                return new BookingUpdate_ResponseDTO
+                {
+                    Success = false,
+                    Message = $"Booking with id {id} was not found"
+                };
+
+            }
+
+            var validationResponse = await _validator.ValidateExtendBooking(bookingToExtend.Id, newEndDate);
+
+            if(!validationResponse.Success)
+            {
+                return validationResponse;
+            }
 
             // Update the end date
             bookingToExtend.EndDate = newEndDate;
+            validationResponse.Message = "Booking successfully extended.";
             await _unitOfWork.Bookings.UpdateAsync(bookingToExtend, ct);
-            return await _unitOfWork.SaveChangesAsync(ct);
+            await _unitOfWork.SaveChangesAsync(ct);
+
+            return validationResponse; 
 
         }
 
@@ -219,6 +232,7 @@ namespace Application.Services
             return result;
         }
 
+        // Run this method daily via a scheduled job to update late bookings and apply/increment late fees
         public async Task<bool> UpdateLateBookings(CancellationToken ct = default)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
@@ -231,7 +245,7 @@ namespace Application.Services
                     var newLateFee = new LateFee
                     {
                         BookingId = booking.Id,
-                        Amount = 10.00m, // Initial late fee amount
+                        Amount = Business_Parameters.LateFee, // Initial late fee amount
                         DateIncurred = DateOnly.FromDateTime(DateTime.Now)
                     };
                     await _unitOfWork.LateFees.AddAsync(newLateFee, ct);
@@ -245,7 +259,7 @@ namespace Application.Services
                     var existingFee = await _unitOfWork.LateFees.GetByIdAsync((int)booking.LateFeeId, ct);
                     if (existingFee != null)
                     {
-                        existingFee.Amount += 10.00m; // Increment by $10 for each day late
+                        existingFee.Amount += Business_Parameters.LateFee; // Increment by $10 for each day late
                         await _unitOfWork.LateFees.UpdateAsync(existingFee, ct);
                         await _unitOfWork.SaveChangesAsync(ct);
                     }

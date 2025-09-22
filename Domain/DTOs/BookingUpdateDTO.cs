@@ -2,6 +2,8 @@ namespace Domain.DTOs
 {
     public record BookingUpdateDTO
     {
+
+        public int BookingId { get; set; }
         public DateOnly StartDate { get; init; }
         public DateOnly EndDate { get; init; }
 

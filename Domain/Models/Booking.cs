@@ -42,10 +42,13 @@ namespace Domain.Models
         // Was it cancelled?
         public bool IsCancelled { get; set; } = false;
 
+        // How many times was it extended?
+        public int ExtensionsCount { get; set; } = 0;
+
 
         // Navigation properties
 
-      
+
         public int BorrowerId { get; set; } // Foreign Key to Borrower
 
         public ICollection<Tool> Tools { get; set; } = new List<Tool>();

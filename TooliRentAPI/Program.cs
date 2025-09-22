@@ -147,6 +147,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<BookingCreateDTO_Validator>
 builder.Services.AddScoped<IBorrower_Validation, Borrower_Validation>();
 builder.Services.AddScoped<IBooking_Validation, Booking_Validation>();
 builder.Services.AddScoped<ITool_Validation, Tool_Validation>();
+builder.Services.AddScoped<IBooking_Validation_Response_Builder, Booking_Validation_Response_Builder>();
 
 // Automapper
 
