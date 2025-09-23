@@ -19,5 +19,8 @@ namespace Domain.Models
         [ForeignKey("BookingId")]
         public int BookingId { get; set; }
 
+        [ForeignKey("UserId")]
+        public int UserId { get; set; }
+
     }
 }
