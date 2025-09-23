@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,8 +15,10 @@ using System.Text;
 
 namespace Presentation.Controllers
 {
+  
     [Route("api/[controller]")]
     [ApiController]
+
     public class AuthController : ControllerBase
     {
 
@@ -33,6 +36,8 @@ namespace Presentation.Controllers
             _context = context;
         }
 
+
+      
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
         {
@@ -55,6 +60,7 @@ namespace Presentation.Controllers
             return BadRequest(result.Errors);
         }
 
+        [EnableRateLimiting("LoginPolicy")]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO dto, CancellationToken ct)
         {
