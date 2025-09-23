@@ -188,6 +188,7 @@ builder.Services.AddAutoMapper(cfg => {
     cfg.AddProfile<BookingMapConfig>();
     cfg.AddProfile<BorrowerMapConfig>();
     cfg.AddProfile<CategoryMapConfig>();
+    cfg.AddProfile<LateFeeMapConfig>();
 });
 
 builder.Services.AddScoped<IMapper, Mapper>();
@@ -207,6 +208,7 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IBorrowerService, BorrowerService>();
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();    
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+ builder.Services.AddScoped<ILateFeeService, LateFeeService>();
 
 var app = builder.Build();
 
