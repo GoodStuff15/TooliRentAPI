@@ -1,4 +1,7 @@
-﻿using Domain.DTOs;
+﻿using Application.Validators.BusinessValidation;
+using AutoMapper;
+using Domain.DTOs;
+using Domain.Models;
 using Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,9 +14,13 @@ namespace Application.Services
     public class CategoryService : ICategoryService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CategoryService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        private readonly ICategory_Validation _validator;
+        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper, ICategory_Validation validator)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _validator = validator;
         }
 
         public async Task<IEnumerable<CategoryReadDTO>> GetAllCategories(CancellationToken ct = default)
@@ -30,5 +37,41 @@ namespace Application.Services
                 Description = c.Description
             });
         }
+
+        public async Task<CategoryReadDTO?> GetCategoryById(int id, CancellationToken ct = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> CreateCategory(CategoryCreateDTO dto, CancellationToken ct = default)
+        {
+            var validationResult = await _validator.CreateCategoryValidation(dto, ct);
+
+            if (!validationResult)
+            {
+                return false; // Validation failed
+            }
+
+
+            var toCreate = _mapper.Map<Category>(dto);
+
+            await _unitOfWork.Categories.AddAsync(toCreate, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
+
+            return true; // Category created successfully
+
+        }
+
+        public async Task<bool> UpdateCategory(int id, CategoryUpdateDTO dto, CancellationToken ct = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteCategory(int id, CancellationToken ct = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async
     }
 }
