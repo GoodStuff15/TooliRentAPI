@@ -42,7 +42,7 @@
                 - CRUD-operationer på verktyg                                   check
                 - CRUD-operationer på verktygskategorier                        check
                 - Hantera användare (aktivera/inaktivera)                       check
-                - Se statistik över utlåning och användning                   XXXXXXXXXXX
+                - Se statistik över utlåning och användning                     check
 
 
 
