@@ -64,14 +64,34 @@ namespace Application.Services
 
         public async Task<bool> UpdateCategory(int id, CategoryUpdateDTO dto, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var toUpdate = await _unitOfWork.Categories.GetByIdAsync(id, ct);
+
+            if (toUpdate == null)
+            {
+                return false; // Category not found
+
+            }
+
+            await _unitOfWork.Categories.UpdateAsync(_mapper.Map(dto, toUpdate), ct);
+            await _unitOfWork.SaveChangesAsync(ct);
+
+            return true; // Category updated successfully
         }
 
-        public Task<bool> DeleteCategory(int id, CancellationToken ct = default)
+        public async Task<bool> DeleteCategory(int id, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var toDelete = await _unitOfWork.Categories.GetByIdAsync(id, ct);
+            if(toDelete == null)
+            {
+                return false; // Not found
+            }
+
+            await _unitOfWork.Categories.DeleteAsync(toDelete, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
+
+            return true; // Deleted successfully
         }
 
-        public async
+        
     }
 }

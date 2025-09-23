@@ -177,6 +177,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<BookingCreateDTO_Validator>
 builder.Services.AddScoped<IBorrower_Validation, Borrower_Validation>();
 builder.Services.AddScoped<IBooking_Validation, Booking_Validation>();
 builder.Services.AddScoped<ITool_Validation, Tool_Validation>();
+builder.Services.AddScoped<ICategory_Validation, Category_Validation>();
 builder.Services.AddScoped<IBooking_Validation_Response_Builder, Booking_Validation_Response_Builder>();
 
 // Automapper
@@ -186,6 +187,7 @@ builder.Services.AddAutoMapper(cfg => {
     cfg.AddProfile<ToolMapConfig>();
     cfg.AddProfile<BookingMapConfig>();
     cfg.AddProfile<BorrowerMapConfig>();
+    cfg.AddProfile<CategoryMapConfig>();
 });
 
 builder.Services.AddScoped<IMapper, Mapper>();
