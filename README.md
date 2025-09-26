@@ -57,7 +57,7 @@ To get a local copy up and running follow these simple example steps.
    git remote -v # confirm the changes
    ```
 
-forts...
+
 
 
 
@@ -66,7 +66,7 @@ forts...
 
 This API can be used to manage a catalogue of tools available for lending by registered members. 
 
-forts...
+
 
 
 
