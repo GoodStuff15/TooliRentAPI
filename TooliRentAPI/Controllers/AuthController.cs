@@ -46,6 +46,17 @@ namespace Presentation.Controllers
                 UserName = dto.Username,
                 Email = dto.Email
             };
+
+            if(await _userManager.FindByNameAsync(dto.Username) != null)
+            {
+                return BadRequest("Username is already taken.");
+            }
+
+            if(await _userManager.FindByEmailAsync(dto.Email) != null)
+            {
+                return BadRequest("Email is already registered.");
+            }
+
             var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (result.Succeeded)
